@@ -1,1 +1,1 @@
-# Luxe REST API
+# Educo REST API
