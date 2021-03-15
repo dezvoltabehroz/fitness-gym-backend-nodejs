@@ -1,0 +1,44 @@
+{
+    "production": {
+        "poolDB": {
+            "connectionLimit": 100,
+            "waitForConnections": true,
+            "queueLimit": 0,
+            "host": "",
+            "user": "",
+            "password": "",
+            "database": "",
+            "port": 3306,
+            "connector": "mysql",
+            "wait_timeout": 28800,
+            "connect_timeout": 10
+        }
+    },
+    "dev": {
+        "poolDB": {
+            "connectionLimit": 10,
+            "waitForConnections": true,
+            "queueLimit": 0,
+            "host": "127.0.0.1",
+            "user": "root",
+            "password": "",
+            "database": "educogym",
+            "port": 3306,
+            "connector": "mysql",
+            "wait_timeout": 2880,
+            "connect_timeout": 10
+        }
+    },
+    "nodeMailer": {
+        "from": "",
+        "host": "",
+        "email": "",
+        "emailPass": ""
+    },
+    "notification": {
+        "title": "Educo GYM"
+    },
+    "firebase":{
+        "key":"key=AAAAv8N0bxY:APA91bFhiH7eNQIsOQkwPP4Z15pICcKP0Z6xhb9f1UXZqnQKx9up-EmVqqBVAlgdhn-yz3NLEjTz6o7358eeE-hyoZr6ua37gTjrQBmYbB5ia_lJ92k4GRCn1OlQdfOOL-gB4Q6-SSra"
+    }
+}
