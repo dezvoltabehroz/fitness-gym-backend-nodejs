@@ -87,12 +87,29 @@ exports.forgetPassword = (req, res) => {
             if (queryResult.affectedRows == 1) {
                 common.sendCodeInEmail(email, code)
                     .then(emailRes => {
-                        res.status(200).json({ status: true, message: "Code has been send successfully", code });
+                        common.resOnSuccess(res, true, "Code has been send successfully", code)
                     })
                     .catch(err => common.resOnError(res, false, err))
             }
             else {
-                res.status(200).json({ status: false, message: "Email is not correct" });
+                common.resOnError(res, false, "Email is not correct")
+            }
+        })
+        .catch(err => common.resOnError(res, false, err))
+}
+
+//Verify Code For Reset Pass Trainee API 
+exports.verifyCodeForResetPass = (req, res) => {
+    let { code } = req.body;
+
+    query.executeQuery(`select * from users where verify_code = '${code}'`)
+        .then(queryResult => {
+            if (queryResult.length == 1) {
+                query.executeQuery(`UPDATE users SET verify_code = null WHERE verify_code = '${code}'`)
+                common.resOnSuccess(res, true, "Code has been verify successfully", queryResult)
+            }
+            else {
+                common.resOnError(res, false, "Code is not correct")
             }
         })
         .catch(err => common.resOnError(res, false, err))
