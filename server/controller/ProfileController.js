@@ -17,3 +17,6 @@ exports.changeProfileDetail = (req, res) => { return profileHelper.changeProfile
 
 //Get Membership Details Controller
 exports.getMembershipDetail = (req, res) => { return profileHelper.getMembershipDetail(req, res) }
+
+//Get Pause List Controller
+exports.getPauseList = (req, res) => { return profileHelper.getPauseList(req, res) }

@@ -25,4 +25,7 @@ router.post('/changeProfileDetail', CommonMiddleware.authenticateToken, ProfileC
 // Get Membership Details API 
 router.post('/getMembershipDetail', CommonMiddleware.authenticateToken, ProfileController.getMembershipDetail);
 
+// Get Pause List API 
+router.post('/getPauseList', CommonMiddleware.authenticateToken, ProfileController.getPauseList);
+
 module.exports = router;

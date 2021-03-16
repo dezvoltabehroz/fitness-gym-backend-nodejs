@@ -75,3 +75,24 @@ exports.getMembershipDetail = (req, res) => {
         })
         .catch(err => common.resOnError(res, false, err))
 }
+
+// API Get Pause List
+exports.getPauseList = (req, res) => {
+    const { id, member_id } = req.body;
+
+    let select_query = `
+    SELECT pause_history.pause_start, pause_history.pause_end, membership.membership_type, DATEDIFF(pause_history.pause_end,pause_history.pause_start) AS days
+    FROM pause_history 
+    INNER JOIN membership ON membership.id = pause_history.membership_id
+    WHERE membership.id = '${member_id}' AND membership.user_id = '${id}'`;
+
+    query.executeQuery(select_query)
+        .then(memberData => {
+            if (memberData.length > 0) {
+                common.resOnSuccess(res, true, "Pause List has been fetched successfully", memberData)
+            }
+            else
+                common.resOnError(res, false, "No Record Found")
+        })
+        .catch(err => common.resOnError(res, false, err))
+}
