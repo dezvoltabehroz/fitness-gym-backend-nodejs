@@ -21,6 +21,9 @@ exports.verifyCodeForResetPass = (req, res) => { return regUser.verifyCodeForRes
 //Update Password Controller
 exports.updatePassword = (req, res) => { return regUser.updatePassword(req, res) }
 
+//Change Password Controller
+exports.changePassword = (req, res) => { return regUser.changePassword(req, res) }
+
 //Refresh Token Controller
 exports.refreshToken = (req, res) => { return regUser.refreshToken(req, res) }
 

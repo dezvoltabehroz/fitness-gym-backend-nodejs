@@ -26,7 +26,10 @@ router.post('/forgetPassword', CommonMiddleware.pass, RegController.forgetPasswo
 router.post('/verifyCodeForResetPass', CommonMiddleware.pass, RegController.verifyCodeForResetPass);
 
 //Update Password API 
-router.post('/updatePassword', CommonMiddleware.authenticateToken, RegController.updatePassword);
+router.post('/updatePassword', CommonMiddleware.pass, RegController.updatePassword);
+
+//Change Password API 
+router.post('/changePassword', CommonMiddleware.authenticateToken, RegController.changePassword);
 
 //Refresh Token API 
 router.post('/refreshToken', CommonMiddleware.pass, RegController.refreshToken);

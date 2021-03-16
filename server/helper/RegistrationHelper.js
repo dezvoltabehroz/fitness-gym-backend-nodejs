@@ -121,6 +121,26 @@ exports.updatePassword = (req, res) => {
 
     bcrypt.hash(new_password, 10)
         .then(hashedPassword => {
+            let update_query = `update users set password = '${hashedPassword}' where id= '${id}'`;
+
+            query.executeQuery(update_query)
+                .then(userData => {
+                    userData.affectedRows == 1 ?
+                        common.resOnSuccess(res, true, "Password has been updated successfully", userData)
+                        :
+                        common.resOnError(res, false, "Unable to update password")
+                })
+                .catch(err => { common.resOnError(res, false, err) })
+        })
+        .catch(err => common.resOnError(res, false, err))
+}
+
+// API Change Password
+exports.changePassword = (req, res) => {
+    const { id, new_password } = req.body;
+
+    bcrypt.hash(new_password, 10)
+        .then(hashedPassword => {
             let update_query = `update users set password = '${hashedPassword}', is_first_login = '1' where id= '${id}'`;
 
             query.executeQuery(update_query)
