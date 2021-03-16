@@ -31,4 +31,7 @@ router.post('/getPauseList', CommonMiddleware.authenticateToken, ProfileControll
 // Request Pause Membership API 
 router.post('/requestPauseMembership', CommonMiddleware.authenticateToken, ProfileController.requestPauseMembership);
 
+// Cancel Request Pause Membership API 
+router.post('/cancelRequestPauseMembership', CommonMiddleware.authenticateToken, ProfileController.cancelRequestPauseMembership);
+
 module.exports = router;

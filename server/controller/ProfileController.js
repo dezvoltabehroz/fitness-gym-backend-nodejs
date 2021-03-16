@@ -23,3 +23,6 @@ exports.getPauseList = (req, res) => { return profileHelper.getPauseList(req, re
 
 //Request Pause Membership Controller
 exports.requestPauseMembership = (req, res) => { return profileHelper.requestPauseMembership(req, res) }
+
+//Cancel Request Pause Membership Controller
+exports.cancelRequestPauseMembership = (req, res) => { return profileHelper.cancelRequestPauseMembership(req, res) }

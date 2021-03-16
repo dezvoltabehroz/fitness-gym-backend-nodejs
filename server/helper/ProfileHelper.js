@@ -81,7 +81,7 @@ exports.getPauseList = (req, res) => {
     const { id, member_id } = req.body;
 
     let select_query = `
-    SELECT pause_history.pause_start, pause_history.pause_end, membership.membership_type, DATEDIFF(pause_history.pause_end,pause_history.pause_start) AS days
+    SELECT pause_history.id,pause_history.pause_start, pause_history.pause_end, membership.membership_type, DATEDIFF(pause_history.pause_end,pause_history.pause_start) AS days
     FROM pause_history 
     INNER JOIN membership ON membership.id = pause_history.membership_id
     WHERE membership.id = '${member_id}' AND membership.user_id = '${id}' and pause_history.is_cancel='0'`;
@@ -108,6 +108,22 @@ exports.requestPauseMembership = (req, res) => {
         .then(pauseData => {
             if (pauseData.affectedRows == 1)
                 common.resOnSuccess(res, true, "Pause Request has been added successfully", pauseData)
+            else
+                common.resOnError(res, false, "No Record Found")
+        })
+        .catch(err => common.resOnError(res, false, err))
+}
+
+// API Cancel Request Pause Membership
+exports.cancelRequestPauseMembership = (req, res) => {
+    const { pause_request_id } = req.body;
+
+    let update_query = `UPDATE pause_history SET is_cancel = '1' WHERE id = '${pause_request_id}'`;
+
+    query.executeQuery(update_query)
+        .then(pauseData => {
+            if (pauseData.affectedRows == 1)
+                common.resOnSuccess(res, true, "Request has been Cancel successfully", pauseData)
             else
                 common.resOnError(res, false, "No Record Found")
         })
