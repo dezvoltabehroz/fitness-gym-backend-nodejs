@@ -84,7 +84,7 @@ exports.getPauseList = (req, res) => {
     SELECT pause_history.pause_start, pause_history.pause_end, membership.membership_type, DATEDIFF(pause_history.pause_end,pause_history.pause_start) AS days
     FROM pause_history 
     INNER JOIN membership ON membership.id = pause_history.membership_id
-    WHERE membership.id = '${member_id}' AND membership.user_id = '${id}'`;
+    WHERE membership.id = '${member_id}' AND membership.user_id = '${id}' and pause_history.is_cancel='0'`;
 
     query.executeQuery(select_query)
         .then(memberData => {
