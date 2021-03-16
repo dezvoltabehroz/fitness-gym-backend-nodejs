@@ -11,3 +11,6 @@ exports.aboutUs = (req, res) => { return profileHelper.aboutUs(req, res) }
 
 //Get Profile Detail Controller
 exports.getProfileDetail = (req, res) => { return profileHelper.getProfileDetail(req, res) }
+
+//Change Profile Detail Controller
+exports.changeProfileDetail = (req, res) => { return profileHelper.changeProfileDetail(req, res) }

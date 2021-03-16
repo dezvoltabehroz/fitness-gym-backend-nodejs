@@ -19,4 +19,7 @@ router.get('/aboutUs', CommonMiddleware.authenticateToken, ProfileController.abo
 // Get Profile Detail API 
 router.post('/getProfileDetail', CommonMiddleware.authenticateToken, ProfileController.getProfileDetail);
 
+// Change Profile Detail API 
+router.post('/changeProfileDetail', CommonMiddleware.authenticateToken, ProfileController.changeProfileDetail);
+
 module.exports = router;
