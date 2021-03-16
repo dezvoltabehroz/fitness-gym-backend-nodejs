@@ -88,9 +88,26 @@ exports.getPauseList = (req, res) => {
 
     query.executeQuery(select_query)
         .then(memberData => {
-            if (memberData.length > 0) {
+            if (memberData.length > 0)
                 common.resOnSuccess(res, true, "Pause List has been fetched successfully", memberData)
-            }
+            else
+                common.resOnError(res, false, "No Record Found")
+        })
+        .catch(err => common.resOnError(res, false, err))
+}
+
+// API Request Pause Membership
+exports.requestPauseMembership = (req, res) => {
+    const { id, member_id, start_date, end_date, reason } = req.body;
+
+    let select_query = `
+    INSERT INTO pause_history(membership_id,user_id,pause_start,pause_end,reason) 
+    VALUES ('${member_id}','${id}','${start_date}','${end_date}','${reason}')`;
+
+    query.executeQuery(select_query)
+        .then(pauseData => {
+            if (pauseData.affectedRows == 1)
+                common.resOnSuccess(res, true, "Pause Request has been added successfully", pauseData)
             else
                 common.resOnError(res, false, "No Record Found")
         })
