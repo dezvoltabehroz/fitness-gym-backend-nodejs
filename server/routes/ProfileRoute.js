@@ -34,4 +34,7 @@ router.post('/requestPauseMembership', CommonMiddleware.authenticateToken, Profi
 // Cancel Request Pause Membership API 
 router.post('/cancelRequestPauseMembership', CommonMiddleware.authenticateToken, ProfileController.cancelRequestPauseMembership);
 
+// List All Booking API 
+router.post('/listAllBookings', CommonMiddleware.authenticateToken, ProfileController.listAllBookings);
+
 module.exports = router;

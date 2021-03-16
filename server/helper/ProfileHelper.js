@@ -1,5 +1,6 @@
 'use strict'
 // Get dependencies
+var moment = require("moment");
 
 // Common Functions File
 var common = require('../config/common')
@@ -124,6 +125,36 @@ exports.cancelRequestPauseMembership = (req, res) => {
         .then(pauseData => {
             if (pauseData.affectedRows == 1)
                 common.resOnSuccess(res, true, "Request has been Cancel successfully", pauseData)
+            else
+                common.resOnError(res, false, "No Record Found")
+        })
+        .catch(err => common.resOnError(res, false, err))
+}
+
+// API List All Booking
+exports.listAllBookings = (req, res) => {
+    const { id } = req.body;
+
+    let select_query = `SELECT * FROM booking WHERE customer_id = '${id}'`;
+
+    query.executeQuery(select_query)
+        .then(bookingData => {
+            if (bookingData.length > 0) {
+                let list_booking = [];
+                bookingData.forEach((dataBooking, index) => {
+                    let booking_slots_query = 
+                    `SELECT COUNT(*) AS booked_slots FROM booking WHERE booking_start_time = '${dataBooking.booking_start_time}' AND booking_end_time = '${dataBooking.booking_end_time}' AND booking_date = '${moment(dataBooking.booking_date).format('yyyy-MM-DD')}'`
+                    query.executeQuery(booking_slots_query)
+                        .then(slotsData => {
+                            dataBooking.booked_slots = slotsData[0].booked_slots
+                            list_booking.push(dataBooking)
+                            if (bookingData.length == (index + 1)) {
+                                common.resOnSuccess(res, true, "Request has been Cancel successfully", list_booking)
+                            }
+                        })
+                        .catch(err => common.resOnError(res, false, err))
+                })
+            }
             else
                 common.resOnError(res, false, "No Record Found")
         })

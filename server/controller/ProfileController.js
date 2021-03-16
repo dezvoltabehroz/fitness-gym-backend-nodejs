@@ -26,3 +26,6 @@ exports.requestPauseMembership = (req, res) => { return profileHelper.requestPau
 
 //Cancel Request Pause Membership Controller
 exports.cancelRequestPauseMembership = (req, res) => { return profileHelper.cancelRequestPauseMembership(req, res) }
+
+//List All Booking Controller
+exports.listAllBookings = (req, res) => { return profileHelper.listAllBookings(req, res) }
