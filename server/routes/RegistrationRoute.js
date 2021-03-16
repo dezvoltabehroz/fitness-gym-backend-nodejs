@@ -28,6 +28,9 @@ router.post('/verifyCodeForResetPass', CommonMiddleware.pass, RegController.veri
 //Update Password API 
 router.post('/updatePassword', CommonMiddleware.pass, RegController.updatePassword);
 
+//Change Password On Login API 
+router.post('/changePasswordOnLogin', CommonMiddleware.authenticateToken, RegController.changePasswordOnLogin);
+
 //Change Password API 
 router.post('/changePassword', CommonMiddleware.authenticateToken, RegController.changePassword);
 

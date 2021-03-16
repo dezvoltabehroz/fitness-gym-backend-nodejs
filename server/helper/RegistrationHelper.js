@@ -135,8 +135,8 @@ exports.updatePassword = (req, res) => {
         .catch(err => common.resOnError(res, false, err))
 }
 
-// API Change Password
-exports.changePassword = (req, res) => {
+// API Change Password on Login
+exports.changePasswordOnLogin = (req, res) => {
     const { id, new_password } = req.body;
 
     bcrypt.hash(new_password, 10)
@@ -153,6 +153,44 @@ exports.changePassword = (req, res) => {
                 .catch(err => { common.resOnError(res, false, err) })
         })
         .catch(err => common.resOnError(res, false, err))
+}
+
+// API Change Password
+exports.changePassword = (req, res) => {
+    const { id, current_password, new_password } = req.body;
+
+    let select_query = `select password from users where id = '${id}'`;
+
+    query.executeQuery(select_query)
+        .then(userData => {
+            if (userData.length > 0) {
+                bcrypt.compare(current_password, userData[0].password)
+                    .then((result) => {
+                        if (result) {
+                            bcrypt.hash(new_password, 10)
+                                .then(hashedPassword => {
+                                    let update_query = `update users set password = '${hashedPassword}' where id= '${id}'`;
+
+                                    query.executeQuery(update_query)
+                                        .then(userData => {
+                                            userData.affectedRows == 1 ?
+                                                common.resOnSuccess(res, true, "Password has been changed successfully", userData)
+                                                :
+                                                common.resOnError(res, false, "Unable to update password")
+                                        })
+                                        .catch(err => { common.resOnError(res, false, err) })
+                                })
+                                .catch(err => common.resOnError(res, false, err))
+                        }
+                        else {
+                            common.resOnError(res, false, "Current Password is not correct")
+                        }
+                    });
+            }
+            else
+                common.resOnError(res, false, "Something Went Wrong")
+        })
+        .catch(err => { common.resOnError(res, false, err) })
 }
 
 // API Refresh Token
