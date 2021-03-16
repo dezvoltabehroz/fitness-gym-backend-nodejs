@@ -21,5 +21,6 @@ app.use(express.urlencoded({ extended: true }));
 // Get our API routes
 const index_routes = require("./routes");
 app.use('/api/registration', index_routes.reg_api);
+app.use('/api/profile', index_routes.profile_api);
 
 module.exports = app;
