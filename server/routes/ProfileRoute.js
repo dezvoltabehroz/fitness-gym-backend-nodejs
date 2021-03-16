@@ -22,4 +22,7 @@ router.post('/getProfileDetail', CommonMiddleware.authenticateToken, ProfileCont
 // Change Profile Detail API 
 router.post('/changeProfileDetail', CommonMiddleware.authenticateToken, ProfileController.changeProfileDetail);
 
+// Get Membership Details API 
+router.post('/getMembershipDetail', CommonMiddleware.authenticateToken, ProfileController.getMembershipDetail);
+
 module.exports = router;

@@ -50,3 +50,23 @@ exports.changeProfileDetail = (req, res) => {
         })
         .catch(err => common.resOnError(res, false, err))
 }
+
+// API Get Membership Details
+exports.getMembershipDetail = (req, res) => {
+    const { id } = req.body;
+
+    let select_query = `
+    SELECT users.profile_picture,users.full_name,users.email,users.phone,membership.membership_type,membership.id AS member_id,membership.membership_start_date,membership.membership_end_date
+    FROM users
+    INNER JOIN membership ON membership.user_id = users.id
+    WHERE users.id = '${id}'`;
+
+    query.executeQuery(select_query)
+        .then(memberData => {
+            if (memberData.length > 0)
+                common.resOnSuccess(res, true, "Membership has been fetched successfully", memberData[0])
+            else
+                common.resOnError(res, false, "No Record Found")
+        })
+        .catch(err => common.resOnError(res, false, err))
+}

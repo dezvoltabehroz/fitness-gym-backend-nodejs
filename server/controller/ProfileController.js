@@ -14,3 +14,6 @@ exports.getProfileDetail = (req, res) => { return profileHelper.getProfileDetail
 
 //Change Profile Detail Controller
 exports.changeProfileDetail = (req, res) => { return profileHelper.changeProfileDetail(req, res) }
+
+//Get Membership Details Controller
+exports.getMembershipDetail = (req, res) => { return profileHelper.getMembershipDetail(req, res) }
