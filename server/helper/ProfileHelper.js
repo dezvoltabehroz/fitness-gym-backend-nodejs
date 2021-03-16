@@ -135,15 +135,15 @@ exports.cancelRequestPauseMembership = (req, res) => {
 exports.listAllBookings = (req, res) => {
     const { id } = req.body;
 
-    let select_query = `SELECT * FROM booking WHERE customer_id = '${id}'`;
+    let select_query = `SELECT * FROM booking WHERE customer_id = '${id}' and is_cancel = 0`;
 
     query.executeQuery(select_query)
         .then(bookingData => {
             if (bookingData.length > 0) {
                 let list_booking = [];
                 bookingData.forEach((dataBooking, index) => {
-                    let booking_slots_query = 
-                    `SELECT COUNT(*) AS booked_slots FROM booking WHERE booking_start_time = '${dataBooking.booking_start_time}' AND booking_end_time = '${dataBooking.booking_end_time}' AND booking_date = '${moment(dataBooking.booking_date).format('yyyy-MM-DD')}'`
+                    let booking_slots_query =
+                        `SELECT COUNT(*) AS booked_slots FROM booking WHERE booking_start_time = '${dataBooking.booking_start_time}' AND booking_end_time = '${dataBooking.booking_end_time}' AND booking_date = '${moment(dataBooking.booking_date).format('yyyy-MM-DD')}' and is_cancel = 0`
                     query.executeQuery(booking_slots_query)
                         .then(slotsData => {
                             dataBooking.booked_slots = slotsData[0].booked_slots
@@ -155,6 +155,22 @@ exports.listAllBookings = (req, res) => {
                         .catch(err => common.resOnError(res, false, err))
                 })
             }
+            else
+                common.resOnError(res, false, "No Record Found")
+        })
+        .catch(err => common.resOnError(res, false, err))
+}
+
+// API Cancel Bookings
+exports.cancelBookings = (req, res) => {
+    const { booking_id } = req.body;
+
+    let update_query = `UPDATE booking SET is_cancel = '1' WHERE id = '${booking_id}'`;
+
+    query.executeQuery(update_query)
+        .then(cancelData => {
+            if (cancelData.affectedRows == 1)
+                common.resOnSuccess(res, true, "Booking has been Cancel successfully", cancelData)
             else
                 common.resOnError(res, false, "No Record Found")
         })
