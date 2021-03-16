@@ -59,5 +59,43 @@ module.exports = {
                 })
                 .catch(err => reject(err))
         })
-    }
+    },
+    sendCodeInEmail(toEmail, code) {
+        var mailOptions = {
+            from: config.nodeMailer.from,
+            to: toEmail,
+            subject: `💌 Educo Gym Verification Code`,
+            html: `
+            <p>
+                <b><i>Your verification code: ${code}</i></b>
+            </p>
+            <p>
+                Enter the code above to reset your password. If you have any questions, feel free to contact us at <a href="mailto:contact@educogym.com">Contact Us</a>
+            </p>
+            <p>
+                Thank you!<br/>
+                Team Educo Gym<br/>
+                <a href="https://educogym.com/">Educo GYm</a>
+            </p>
+            `
+        };
+
+        const transporter = nodemailer.createTransport({
+            host: config.nodeMailer.host,
+            auth: {
+                user: config.nodeMailer.email,
+                pass: config.nodeMailer.emailPass
+            }
+        })
+
+        return new Promise((resolved, reject) => {
+            transporter.sendMail(mailOptions, function (error, info) {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolved(info.response);
+                }
+            });
+        })
+    },
 }

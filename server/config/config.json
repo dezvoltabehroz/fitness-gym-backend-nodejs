@@ -30,10 +30,10 @@
         }
     },
     "nodeMailer": {
-        "from": "",
-        "host": "",
-        "email": "",
-        "emailPass": ""
+        "from": "support@educogym.com",
+        "host": "smtp.dreamhost.com",
+        "email": "no-reply@fleekservices.com",
+        "emailPass": "Admin@1357@"
     },
     "notification": {
         "title": "Educo GYM"

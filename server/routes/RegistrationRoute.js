@@ -19,6 +19,9 @@ router.post('/addTrainee', CommonMiddleware.pass, RegController.addTrainee);
 //Login Trainee API 
 router.post('/loginTrainee', CommonMiddleware.pass, RegController.loginTrainee);
 
+//Forget Password Trainee API 
+router.post('/forgetPassword', CommonMiddleware.pass, RegController.forgetPassword);
+
 //Update Password API 
 router.post('/updatePassword', CommonMiddleware.authenticateToken, RegController.updatePassword);
 

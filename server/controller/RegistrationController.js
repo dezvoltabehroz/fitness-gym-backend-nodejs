@@ -12,6 +12,9 @@ exports.addTrainee = (req, res) => { return regUser.addTrainee(req, res) }
 //Login Trainee Controller
 exports.loginTrainee = (req, res) => { return regUser.loginTrainee(req, res) }
 
+//Forget Password Trainee Controller
+exports.forgetPassword = (req, res) => { return regUser.forgetPassword(req, res) }
+
 //Update Password Controller
 exports.updatePassword = (req, res) => { return regUser.updatePassword(req, res) }
 

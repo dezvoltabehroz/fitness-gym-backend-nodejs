@@ -77,6 +77,27 @@ exports.loginTrainee = (req, res) => {
         .catch(err => { common.resOnError(res, false, err) })
 }
 
+// API Forget Password Trainee
+exports.forgetPassword = (req, res) => {
+    let { email } = req.body;
+    let code = common.generate_random_code();
+
+    query.executeQuery(`UPDATE users SET verify_code = '${code}' WHERE email = '${email}'`)
+        .then(queryResult => {
+            if (queryResult.affectedRows == 1) {
+                common.sendCodeInEmail(email, code)
+                    .then(emailRes => {
+                        res.status(200).json({ status: true, message: "Code has been send successfully", code });
+                    })
+                    .catch(err => common.resOnError(res, false, err))
+            }
+            else {
+                res.status(200).json({ status: false, message: "Email is not correct" });
+            }
+        })
+        .catch(err => common.resOnError(res, false, err))
+}
+
 // API Update Password
 exports.updatePassword = (req, res) => {
     const { id, new_password } = req.body;
