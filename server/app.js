@@ -23,4 +23,11 @@ const index_routes = require("./routes");
 app.use('/api/registration', index_routes.reg_api);
 app.use('/api/profile', index_routes.profile_api);
 
+app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "build")));
+
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "build", "index.html"));
+});
+
 module.exports = app;
