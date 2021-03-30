@@ -14,6 +14,7 @@ module.exports = {
         res.status(200).json({ success: status, message: msg, data: data });
     },
     resOnError(res, status, err) {
+        console.log(err)
         res.status(404).json({ success: status, message: err });
     },
     generate_random_code() {

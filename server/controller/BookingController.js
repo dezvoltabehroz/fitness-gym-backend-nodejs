@@ -1,0 +1,10 @@
+'use strict'
+
+//Helper
+var bookingHelper = require('../helper/BookingHelper');
+
+//Pass Controller
+exports.pass = (req, res) => { return bookingHelper.health(req, res) }
+
+//Get All Booking By Date And Time Controller
+exports.getBookings = (req, res) => { return bookingHelper.getBookings(req, res) }
