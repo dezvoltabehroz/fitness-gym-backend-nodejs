@@ -16,4 +16,7 @@ router.get('/health', CommonMiddleware.pass, bookingController.pass);
 // Get All Booking By Date And Time API 
 router.post('/getBookings', CommonMiddleware.authenticateToken, bookingController.getBookings);
 
+// Book a slot API 
+router.post('/bookSlot', CommonMiddleware.authenticateToken, bookingController.bookSlot);
+
 module.exports = router;

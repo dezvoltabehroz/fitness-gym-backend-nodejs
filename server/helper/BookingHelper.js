@@ -88,7 +88,19 @@ exports.getBookings = (req, res) => {
     }
 }
 
+// API Book Slot
+exports.bookSlot = (req, res) => {
+    const { id, booking_date, booking_start_time, booking_end_time } = req.body;
+    let query_insert = `INSERT INTO booking (booking_date,booking_start_time,booking_end_time,customer_id) 
+    VALUES('${booking_date}','${booking_start_time}','${booking_end_time}','${id}')`
 
+    query.executeQuery(query_insert)
+        .then(resData => {
+            if (resData.affectedRows == 1)
+                common.resOnSuccess(res, true, "Slot has been booked successfully", resData)
+        })
+        .catch(err => common.resOnError(res, false, err))
+}
 
 // ============================================================== Function ==============================================================
 function bookingSlots(date, start_time, end_time) {
