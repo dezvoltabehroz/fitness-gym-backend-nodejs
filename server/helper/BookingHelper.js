@@ -16,7 +16,7 @@ exports.health = (req, res) => {
 
 // API Get All Booking By Date And Time
 exports.getBookings = (req, res) => {
-    const { date, start_time, end_time } = req.body;
+    const { id,date, start_time, end_time } = req.body;
 
     let query_str = `SELECT * FROM schedules WHERE schedule_date = '${date}'`
 
