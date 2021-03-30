@@ -16,7 +16,7 @@ exports.health = (req, res) => {
 
 // API Get All Booking By Date And Time
 exports.getBookings = (req, res) => {
-    const { id,date, start_time, end_time } = req.body;
+    const { id, date, start_time, end_time } = req.body;
 
     let query_str = `SELECT * FROM schedules WHERE schedule_date = '${date}'`
 
@@ -116,7 +116,7 @@ exports.unBookSlot = (req, res) => {
 }
 
 // ============================================================== Function ==============================================================
-function bookingSlots(date, start_time, end_time) {
+function bookingSlots(id, date, start_time, end_time) {
     return new Promise((resolve, reject) => {
         bookingSlotsArray(id, date, start_time, end_time)
             .then(resultArray => {
