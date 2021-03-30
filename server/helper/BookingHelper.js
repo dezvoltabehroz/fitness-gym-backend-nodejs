@@ -143,7 +143,7 @@ function bookingSlotsArray(id, date, start_time, end_time) {
                 booking_start_time = '${bookingSlots.booking_start_time}' AND 
                 booking_end_time = '${bookingSlots.booking_end_time}' 
                 AND booking_date = '${moment(date).format('yyyy-MM-DD')}' and is_cancel = 0 AND customer_id = '${id}'
-            ) AS is_booked
+            ) AS is_booked, is_blocked
             FROM booking WHERE 
             booking_start_time = '${bookingSlots.booking_start_time}' AND 
             booking_end_time = '${bookingSlots.booking_end_time}' 
@@ -153,6 +153,7 @@ function bookingSlotsArray(id, date, start_time, end_time) {
             .then(slotsData => {
                 bookingSlots.booked_slots = slotsData[0].booked_slots
                 bookingSlots.is_booked = slotsData[0].is_booked
+                bookingSlots.is_blocked = slotsData[0].is_blocked
                 let timeSlots = [bookingSlots];
 
                 while (start_time != end_time) {
@@ -170,7 +171,7 @@ function bookingSlotsArray(id, date, start_time, end_time) {
                             booking_start_time = '${bookingSlots.booking_start_time}' AND 
                             booking_end_time = '${bookingSlots.booking_end_time}' 
                             AND booking_date = '${moment(date).format('yyyy-MM-DD')}' and is_cancel = 0 AND customer_id = '${id}'
-                        ) AS is_booked
+                        ) AS is_booked,is_blocked
                         FROM booking WHERE 
                         booking_start_time = '${bookingSlots.booking_start_time}' AND 
                         booking_end_time = '${bookingSlots.booking_end_time}' 
@@ -180,6 +181,7 @@ function bookingSlotsArray(id, date, start_time, end_time) {
                         .then(slotsData2 => {
                             bookingSlots.booked_slots = slotsData2[0].booked_slots
                             bookingSlots.is_booked = slotsData2[0].is_booked
+                            bookingSlots.is_blocked = slotsData2[0].is_blocked
                             timeSlots.push(bookingSlots);
 
                             if (bookingSlots.booking_end_time == end_time)
