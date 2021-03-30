@@ -25,7 +25,7 @@ exports.getBookings = (req, res) => {
             .then(scheduleData => {
                 if (scheduleData.length > 0) {
                     let data_schedule = scheduleData[0];
-                    bookingSlots(date, start_time, end_time)
+                    bookingSlots(id, date, start_time, end_time)
                         .then(result => {
                             let newArraySlots = [];
 
@@ -58,7 +58,7 @@ exports.getBookings = (req, res) => {
             .then(scheduleData => {
                 if (scheduleData.length > 0) {
                     let data_schedule = scheduleData[0];
-                    bookingSlots(date, data_schedule.start_time, data_schedule.end_time)
+                    bookingSlots(id, date, data_schedule.start_time, data_schedule.end_time)
                         .then(result => {
                             let newArraySlots = [];
 
@@ -118,7 +118,7 @@ exports.unBookSlot = (req, res) => {
 // ============================================================== Function ==============================================================
 function bookingSlots(date, start_time, end_time) {
     return new Promise((resolve, reject) => {
-        bookingSlotsArray(date, start_time, end_time)
+        bookingSlotsArray(id, date, start_time, end_time)
             .then(resultArray => {
                 resolve(resultArray)
             })
@@ -126,7 +126,7 @@ function bookingSlots(date, start_time, end_time) {
     })
 }
 
-function bookingSlotsArray(date, start_time, end_time) {
+function bookingSlotsArray(id, date, start_time, end_time) {
     return new Promise((resolve, reject) => {
         let interval = "20";
 
@@ -136,7 +136,14 @@ function bookingSlotsArray(date, start_time, end_time) {
         bookingSlots.booking_end_time = moment(start_time, 'HH:mm:ss').add(interval, 'minutes').format("HH:mm:ss");
 
         let booking_slots_query =
-            `SELECT COUNT(*) AS booked_slots 
+            `SELECT COUNT(*) AS booked_slots,
+            (
+                SELECT COUNT(*) AS is_booked 
+                FROM booking WHERE 
+                booking_start_time = '${bookingSlots.booking_start_time}' AND 
+                booking_end_time = '${bookingSlots.booking_end_time}' 
+                AND booking_date = '${moment(date).format('yyyy-MM-DD')}' and is_cancel = 0 AND customer_id = '${id}'
+            ) AS is_booked
             FROM booking WHERE 
             booking_start_time = '${bookingSlots.booking_start_time}' AND 
             booking_end_time = '${bookingSlots.booking_end_time}' 
@@ -145,6 +152,7 @@ function bookingSlotsArray(date, start_time, end_time) {
         query.executeQuery(booking_slots_query)
             .then(slotsData => {
                 bookingSlots.booked_slots = slotsData[0].booked_slots
+                bookingSlots.is_booked = slotsData[0].is_booked
                 let timeSlots = [bookingSlots];
 
                 while (start_time != end_time) {
@@ -155,7 +163,14 @@ function bookingSlotsArray(date, start_time, end_time) {
                     bookingSlots.booking_end_time = moment(start_time, 'HH:mm:ss').add(interval, 'minutes').format("HH:mm:ss");
 
                     let booking_slots_query =
-                        `SELECT COUNT(*) AS booked_slots 
+                        `SELECT COUNT(*) AS booked_slots,
+                        (
+                            SELECT COUNT(*) AS is_booked 
+                            FROM booking WHERE 
+                            booking_start_time = '${bookingSlots.booking_start_time}' AND 
+                            booking_end_time = '${bookingSlots.booking_end_time}' 
+                            AND booking_date = '${moment(date).format('yyyy-MM-DD')}' and is_cancel = 0 AND customer_id = '${id}'
+                        ) AS is_booked
                         FROM booking WHERE 
                         booking_start_time = '${bookingSlots.booking_start_time}' AND 
                         booking_end_time = '${bookingSlots.booking_end_time}' 
@@ -164,6 +179,7 @@ function bookingSlotsArray(date, start_time, end_time) {
                     query.executeQuery(booking_slots_query)
                         .then(slotsData2 => {
                             bookingSlots.booked_slots = slotsData2[0].booked_slots
+                            bookingSlots.is_booked = slotsData2[0].is_booked
                             timeSlots.push(bookingSlots);
 
                             if (bookingSlots.booking_end_time == end_time)
