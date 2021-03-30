@@ -19,4 +19,7 @@ router.post('/getBookings', CommonMiddleware.authenticateToken, bookingControlle
 // Book a slot API 
 router.post('/bookSlot', CommonMiddleware.authenticateToken, bookingController.bookSlot);
 
+// Un Book a slot API 
+router.post('/unBookSlot', CommonMiddleware.authenticateToken, bookingController.unBookSlot);
+
 module.exports = router;

@@ -102,6 +102,19 @@ exports.bookSlot = (req, res) => {
         .catch(err => common.resOnError(res, false, err))
 }
 
+// API Un Book Slot
+exports.unBookSlot = (req, res) => {
+    const { id, booking_date, booking_start_time, booking_end_time } = req.body;
+    let query_delete = `DELETE FROM booking WHERE booking_date='${booking_date}' AND booking_start_time='${booking_start_time}' AND booking_end_time='${booking_end_time}' AND customer_id = '${id}'`
+
+    query.executeQuery(query_delete)
+        .then(resData => {
+            if (resData.affectedRows == 1)
+                common.resOnSuccess(res, true, "Slot has been deleted successfully", resData)
+        })
+        .catch(err => common.resOnError(res, false, err))
+}
+
 // ============================================================== Function ==============================================================
 function bookingSlots(date, start_time, end_time) {
     return new Promise((resolve, reject) => {

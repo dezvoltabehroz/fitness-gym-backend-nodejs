@@ -11,3 +11,6 @@ exports.getBookings = (req, res) => { return bookingHelper.getBookings(req, res)
 
 //Book Slot Controller
 exports.bookSlot = (req, res) => { return bookingHelper.bookSlot(req, res) }
+
+//Un Book Slot Controller
+exports.unBookSlot = (req, res) => { return bookingHelper.unBookSlot(req, res) }
