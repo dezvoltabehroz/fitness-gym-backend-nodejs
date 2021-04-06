@@ -24,6 +24,7 @@ const index_routes = require("./routes");
 app.use('/api/registration', index_routes.reg_api);
 app.use('/api/profile', index_routes.profile_api);
 app.use('/api/booking', index_routes.booking_api);
+app.use('/api/admin', index_routes.admin_api);
 
 app.get("*", (req, res) => {
     res.sendFile(path.join(__dirname, "build", "index.html"));

@@ -163,7 +163,7 @@ exports.listAllBookings = (req, res) => {
 
 // API Cancel Bookings
 exports.cancelBookings = (req, res) => {
-    const { id,booking_id } = req.body;
+    const { id, booking_id } = req.body;
 
     let update_query = `UPDATE booking SET is_cancel = '1' WHERE id = '${booking_id}' and customer_id = '${id}'`;
 
