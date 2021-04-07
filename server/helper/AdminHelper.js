@@ -18,7 +18,9 @@ exports.health = (req, res) => {
 exports.userProfile = (req, res) => {
     const { id } = req.body
 
-    let query_str = `SELECT * FROM users INNER JOIN about_user ON users.id = about_user.user_id WHERE users.id = '${id}'`
+    let query_str = `
+    SELECT users.first_name,users.last_name,users.email,users.gender,users.age,about_user.about_text 
+    FROM users INNER JOIN about_user ON users.id = about_user.user_id WHERE users.id = '${id}'`
 
     query.executeQuery(query_str)
         .then(queryResult => {
