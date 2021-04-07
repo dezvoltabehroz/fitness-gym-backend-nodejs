@@ -31,3 +31,136 @@ exports.userProfile = (req, res) => {
         })
         .catch(err => common.resOnError(res, false, err))
 }
+
+// Analytics Helper
+exports.analytics = (req, res) => {
+    const { date } = req.body
+    let query_str = `SELECT * FROM schedules WHERE schedule_date = '${date}'`
+
+    let booked_slots = 0, full_slots = 0, empty_slots = 0, blocked_slots = 0;
+
+    query.executeQuery(query_str)
+        .then(scheduleData => {
+            if (scheduleData.length > 0) {
+                let data_schedule = scheduleData[0];
+                bookingSlots(date, data_schedule.start_time, data_schedule.end_time)
+                    .then(result => {
+                        let analyticsObj = {
+                            booked_slots: 0,
+                            full_slots: 0,
+                            empty_slots: 0,
+                            blocked_slots: 0,
+                            all_slots: result.length * 4
+                        };
+
+                        result.map((slotData, index) => {
+                            if (slotData.is_booked > 0 && slotData.is_booked <= 4)
+                                analyticsObj.booked_slots = analyticsObj.booked_slots + slotData.is_booked
+
+                            if (slotData.is_booked < 4)
+                                analyticsObj.empty_slots = analyticsObj.empty_slots + (4 - slotData.is_booked)
+
+                            if (slotData.is_blocked != 0)
+                                analyticsObj.blocked_slots = analyticsObj.blocked_slots + slotData.is_blocked
+
+
+                            if (result.length == (index + 1)) {
+                                analyticsObj.full_slots = (analyticsObj.booked_slots / 4)
+                                common.resOnSuccess(res, true, "Booking List has been fetched successfully", analyticsObj)
+                            }
+                        })
+                    })
+                    .catch(err => common.resOnError(res, false, err))
+            }
+            else
+                common.resOnError(res, false, "No Record Found")
+        })
+        .catch(err => common.resOnError(res, false, err))
+}
+
+// ============================================================== Function ==============================================================
+function bookingSlots(date, start_time, end_time) {
+    return new Promise((resolve, reject) => {
+        bookingSlotsArray(date, start_time, end_time)
+            .then(resultArray => {
+                resolve(resultArray)
+            })
+            .catch(err => reject(err))
+    })
+}
+
+function bookingSlotsArray(date, start_time, end_time) {
+    return new Promise((resolve, reject) => {
+        let interval = "20";
+
+        let bookingSlots = {};
+        bookingSlots.booking_time_duration = "00:20:00";
+        bookingSlots.booking_start_time = start_time;
+        bookingSlots.booking_end_time = moment(start_time, 'HH:mm:ss').add(interval, 'minutes').format("HH:mm:ss");
+
+        let booking_slots_query =
+            `SELECT COUNT(*) AS booked_slots,
+            (
+                SELECT COUNT(*) AS is_booked 
+                FROM booking WHERE 
+                booking_start_time = '${bookingSlots.booking_start_time}' AND 
+                booking_end_time = '${bookingSlots.booking_end_time}' 
+                AND booking_date = '${moment(date).format('yyyy-MM-DD')}' and is_cancel = 0
+            ) AS is_booked, IFNULL(is_blocked, 0) AS is_blocked
+            FROM booking WHERE 
+            booking_start_time = '${bookingSlots.booking_start_time}' AND 
+            booking_end_time = '${bookingSlots.booking_end_time}' 
+            AND booking_date = '${moment(date).format('yyyy-MM-DD')}' and is_cancel = 0`
+
+        query.executeQuery(booking_slots_query)
+            .then(slotsData => {
+                bookingSlots.booked_slots = slotsData[0].booked_slots
+                bookingSlots.is_booked = slotsData[0].is_booked
+                bookingSlots.is_blocked = slotsData[0].is_blocked
+                let timeSlots = [bookingSlots];
+
+                while (start_time != end_time) {
+                    start_time = addMinutes(start_time, interval);
+                    let bookingSlots = {};
+                    bookingSlots.booking_time_duration = "00:20:00";
+                    bookingSlots.booking_start_time = start_time;
+                    bookingSlots.booking_end_time = moment(start_time, 'HH:mm:ss').add(interval, 'minutes').format("HH:mm:ss");
+
+                    let booking_slots_query =
+                        `SELECT COUNT(*) AS booked_slots,
+                        (
+                            SELECT COUNT(*) AS is_booked 
+                            FROM booking WHERE 
+                            booking_start_time = '${bookingSlots.booking_start_time}' AND 
+                            booking_end_time = '${bookingSlots.booking_end_time}' 
+                            AND booking_date = '${moment(date).format('yyyy-MM-DD')}' and is_cancel = 0
+                        ) AS is_booked,IFNULL(is_blocked, 0) AS is_blocked
+                        FROM booking WHERE 
+                        booking_start_time = '${bookingSlots.booking_start_time}' AND 
+                        booking_end_time = '${bookingSlots.booking_end_time}' 
+                        AND booking_date = '${moment(date).format('yyyy-MM-DD')}' and is_cancel = 0`
+
+                    query.executeQuery(booking_slots_query)
+                        .then(slotsData2 => {
+                            bookingSlots.booked_slots = slotsData2[0].booked_slots
+                            bookingSlots.is_booked = slotsData2[0].is_booked
+                            bookingSlots.is_blocked = slotsData2[0].is_blocked
+                            timeSlots.push(bookingSlots);
+
+                            if (bookingSlots.booking_end_time == end_time)
+                                resolve(timeSlots)
+                        })
+                        .catch(err => reject(err))
+                }
+            })
+            .catch(err => reject(err))
+    })
+}
+
+function addMinutes(time, minutes) {
+    var date = new Date(new Date('01/01/2015 ' + time).getTime() + minutes * 60000);
+    var tempTime = ((date.getHours().toString().length == 1) ? '0' + date.getHours() : date.getHours()) + ':' +
+        ((date.getMinutes().toString().length == 1) ? '0' + date.getMinutes() : date.getMinutes()) + ':' +
+        ((date.getSeconds().toString().length == 1) ? '0' + date.getSeconds() : date.getSeconds());
+    return tempTime;
+}
