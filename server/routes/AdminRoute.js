@@ -25,4 +25,7 @@ router.post('/listAllMembers', CommonMiddleware.authenticateToken, adminControll
 // Member Profile Detail API 
 router.post('/memberProfileDetails', CommonMiddleware.authenticateToken, adminController.memberProfileDetails);
 
+// Pause Membership API 
+router.post('/pauseMembership', CommonMiddleware.authenticateToken, adminController.pauseMembership);
+
 module.exports = router;

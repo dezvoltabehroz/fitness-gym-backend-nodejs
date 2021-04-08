@@ -122,6 +122,19 @@ exports.memberProfileDetails = (req, res) => {
         .catch(err => common.resOnError(res, false, err))
 }
 
+// Pause Membership Helper
+exports.pauseMembership = (req, res) => {
+    const { membership_id, user_id, pause_start, pause_end } = req.body;
+
+    let query_str = `INSERT INTO pause_history(membership_id,user_id,pause_start,pause_end) VALUES ('${membership_id}','${user_id}','${pause_start}','${pause_end}')`
+
+    query.executeQuery(query_str)
+        .then(membersData => {
+            common.resOnSuccess(res, true, "Pause Membership has been added successfully", membersData)
+        })
+        .catch(err => common.resOnError(res, false, err))
+}
+
 // ============================================================== Function ==============================================================
 function bookingSlots(date, start_time, end_time) {
     return new Promise((resolve, reject) => {

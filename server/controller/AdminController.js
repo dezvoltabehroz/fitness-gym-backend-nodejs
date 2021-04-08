@@ -17,3 +17,6 @@ exports.listAllMembers = (req, res) => { return adminHelper.listAllMembers(req, 
 
 //Member Profile Detail Controller
 exports.memberProfileDetails = (req, res) => { return adminHelper.memberProfileDetails(req, res) }
+
+//Pause Membership Controller
+exports.pauseMembership = (req, res) => { return adminHelper.pauseMembership(req, res) }
