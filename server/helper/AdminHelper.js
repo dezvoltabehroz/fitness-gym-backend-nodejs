@@ -154,7 +154,7 @@ exports.deleteUser = (req, res) => {
 
 // Update User Helper
 exports.updateUser = (req, res) => {
-    const { user_id, first_name, last_name, age, phone, email, address, gender, emergency_num, membership_type, membership_start_date, membership_end_date } = req.body;
+    const { user_id, first_name, last_name, age, phone, email, address, dob, gender, emergency_num, membership_type, membership_start_date, membership_end_date } = req.body;
 
     let update_query_str = `UPDATE users SET
         users.first_name = '${first_name}',
