@@ -11,3 +11,9 @@ exports.userProfile = (req, res) => { return adminHelper.userProfile(req, res) }
 
 //Analytics Controller
 exports.analytics = (req, res) => { return adminHelper.analytics(req, res) }
+
+//List All Members Controller
+exports.listAllMembers = (req, res) => { return adminHelper.listAllMembers(req, res) }
+
+//Member Profile Detail Controller
+exports.memberProfileDetails = (req, res) => { return adminHelper.memberProfileDetails(req, res) }

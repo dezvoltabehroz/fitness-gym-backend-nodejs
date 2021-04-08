@@ -19,4 +19,10 @@ router.post('/userProfile', CommonMiddleware.authenticateToken, adminController.
 // Analytics API 
 router.post('/analytics', CommonMiddleware.authenticateToken, adminController.analytics);
 
+// List All Members API 
+router.post('/listAllMembers', CommonMiddleware.authenticateToken, adminController.listAllMembers);
+
+// Member Profile Detail API 
+router.post('/memberProfileDetails', CommonMiddleware.authenticateToken, adminController.memberProfileDetails);
+
 module.exports = router;

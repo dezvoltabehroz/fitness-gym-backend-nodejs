@@ -78,6 +78,44 @@ exports.analytics = (req, res) => {
         .catch(err => common.resOnError(res, false, err))
 }
 
+// Analytics Helper
+exports.listAllMembers = (req, res) => {
+    let query_str = `
+    SELECT users.id AS user_id, membership.id AS member_id, users.first_name, users.last_name, users.full_name, membership.membership_type, membership.membership_status, membership.membership_start_date, membership.membership_end_date
+    FROM users 
+    INNER JOIN membership ON membership.user_id = users.id
+    WHERE users.user_type = 'user'`
+
+    query.executeQuery(query_str)
+        .then(membersData => {
+            if (membersData.length > 0)
+                common.resOnSuccess(res, true, "List of members have been fetched successfully", membersData)
+            else
+                common.resOnError(res, false, "No Record Found")
+        })
+        .catch(err => common.resOnError(res, false, err))
+}
+
+// Member Profile Detail Helper
+exports.memberProfileDetails = (req, res) => {
+    const { member_id } = req.body;
+    let query_str = `
+    SELECT users.id AS user_id, membership.id AS member_id, users.first_name, users.last_name, users.full_name, users.age, users.phone, users.email, users.address, users.dob,users.gender, users.emergency_num,
+    membership.membership_status, membership.membership_type, membership.membership_start_date, membership.membership_end_date
+    FROM users 
+    INNER JOIN membership ON membership.user_id = users.id
+    WHERE users.id= '${member_id}'`
+
+    query.executeQuery(query_str)
+        .then(membersData => {
+            if (membersData.length > 0)
+                common.resOnSuccess(res, true, "Member Profile Detail have been fetched successfully", membersData)
+            else
+                common.resOnError(res, false, "No Record Found")
+        })
+        .catch(err => common.resOnError(res, false, err))
+}
+
 // ============================================================== Function ==============================================================
 function bookingSlots(date, start_time, end_time) {
     return new Promise((resolve, reject) => {
