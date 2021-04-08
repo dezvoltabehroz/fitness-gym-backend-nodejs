@@ -23,3 +23,6 @@ exports.pauseMembership = (req, res) => { return adminHelper.pauseMembership(req
 
 //Delete User Controller
 exports.deleteUser = (req, res) => { return adminHelper.deleteUser(req, res) }
+
+//Update User Controller
+exports.updateUser = (req, res) => { return adminHelper.updateUser(req, res) }

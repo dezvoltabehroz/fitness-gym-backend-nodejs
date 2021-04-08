@@ -152,6 +152,43 @@ exports.deleteUser = (req, res) => {
     common.resOnSuccess(res, true, "Delete successfully")
 }
 
+// Update User Helper
+exports.updateUser = (req, res) => {
+    const { user_id, first_name, last_name, age, phone, email, address, gender, emergency_num, membership_type, membership_start_date, membership_end_date } = req.body;
+
+    let update_query_str = `UPDATE users SET
+        users.first_name = '${first_name}',
+        users.last_name = '${last_name}',
+        users.age = '${age}',
+        users.phone = '${phone}',
+        users.email = '${email}',
+        users.address = '${address}',
+        users.dob = '${dob}',
+        users.gender = '${gender}',
+        users.emergency_num = '${emergency_num}'
+        WHERE id = '${user_id}'`
+
+    let update_query_str_member = `UPDATE membership SET 
+        membership.membership_type = '${membership_type}',
+        membership.membership_start_date = '${membership_start_date}',
+        membership.membership_end_date = '${membership_end_date}'
+        WHERE user_id = '${user_id}'`
+
+    query.executeQuery(update_query_str)
+        .then(userUpdated => {
+            query.executeQuery(update_query_str_member)
+                .then(memberUpdated => {
+                    let data = []
+                    data.push(userUpdated)
+                    data.push(memberUpdated)
+                    common.resOnSuccess(res, true, "Profile has been updated successfully", data)
+                })
+                .catch(err => common.resOnError(res, false, err))
+        })
+        .catch(err => common.resOnError(res, false, err))
+
+}
+
 // ============================================================== Function ==============================================================
 function bookingSlots(date, start_time, end_time) {
     return new Promise((resolve, reject) => {

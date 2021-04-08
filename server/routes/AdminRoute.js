@@ -31,4 +31,7 @@ router.post('/pauseMembership', CommonMiddleware.authenticateToken, adminControl
 // Delete User API 
 router.post('/deleteUser', CommonMiddleware.authenticateToken, adminController.deleteUser);
 
+// Update User API 
+router.post('/updateUser', CommonMiddleware.authenticateToken, adminController.updateUser);
+
 module.exports = router;
