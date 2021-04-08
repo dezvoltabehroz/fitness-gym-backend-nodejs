@@ -20,3 +20,6 @@ exports.memberProfileDetails = (req, res) => { return adminHelper.memberProfileD
 
 //Pause Membership Controller
 exports.pauseMembership = (req, res) => { return adminHelper.pauseMembership(req, res) }
+
+//Delete User Controller
+exports.deleteUser = (req, res) => { return adminHelper.deleteUser(req, res) }

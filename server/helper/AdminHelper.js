@@ -135,6 +135,23 @@ exports.pauseMembership = (req, res) => {
         .catch(err => common.resOnError(res, false, err))
 }
 
+// Delete User Helper
+exports.deleteUser = (req, res) => {
+    const { user_id } = req.body;
+
+    let query_str_1 = `DELETE FROM users WHERE id = '${user_id}'`;
+    let query_str_2 = `DELETE FROM pause_history WHERE user_id = '${user_id}'`;
+    let query_str_3 = `DELETE FROM membership WHERE user_id = '${user_id}'`;
+    let query_str_4 = `DELETE FROM about_user WHERE user_id = '${user_id}'`;
+
+    query.executeQuery(query_str_1)
+    query.executeQuery(query_str_2)
+    query.executeQuery(query_str_3)
+    query.executeQuery(query_str_4)
+
+    common.resOnSuccess(res, true, "Delete successfully")
+}
+
 // ============================================================== Function ==============================================================
 function bookingSlots(date, start_time, end_time) {
     return new Promise((resolve, reject) => {

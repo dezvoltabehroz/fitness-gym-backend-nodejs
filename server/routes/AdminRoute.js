@@ -28,4 +28,7 @@ router.post('/memberProfileDetails', CommonMiddleware.authenticateToken, adminCo
 // Pause Membership API 
 router.post('/pauseMembership', CommonMiddleware.authenticateToken, adminController.pauseMembership);
 
+// Delete User API 
+router.post('/deleteUser', CommonMiddleware.authenticateToken, adminController.deleteUser);
+
 module.exports = router;
