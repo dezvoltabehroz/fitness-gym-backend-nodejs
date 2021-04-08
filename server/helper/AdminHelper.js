@@ -80,10 +80,14 @@ exports.analytics = (req, res) => {
 
 // Analytics Helper
 exports.listAllMembers = (req, res) => {
+    const { date } = req.body;
+
     let query_str = `
-    SELECT users.id AS user_id, membership.id AS member_id, users.first_name, users.last_name, users.full_name, membership.membership_type, membership.membership_status, membership.membership_start_date, membership.membership_end_date
+    SELECT users.id AS user_id, membership.id AS member_id, users.first_name, users.last_name, users.full_name, membership.membership_type, membership.membership_status, membership.membership_start_date, membership.membership_end_date,
+    IFNULL(pause_history.id,0) AS is_pause
     FROM users 
     INNER JOIN membership ON membership.user_id = users.id
+    LEFT JOIN pause_history ON users.id = pause_history.user_id AND pause_history.pause_start <= '${date}' AND pause_history.pause_end >='${date}' 
     WHERE users.user_type = 'user'`
 
     query.executeQuery(query_str)
@@ -98,12 +102,14 @@ exports.listAllMembers = (req, res) => {
 
 // Member Profile Detail Helper
 exports.memberProfileDetails = (req, res) => {
-    const { member_id } = req.body;
+    const { member_id, date } = req.body;
     let query_str = `
     SELECT users.id AS user_id, membership.id AS member_id, users.first_name, users.last_name, users.full_name, users.age, users.phone, users.email, users.address, users.dob,users.gender, users.emergency_num,
-    membership.membership_status, membership.membership_type, membership.membership_start_date, membership.membership_end_date
+    membership.membership_status, membership.membership_type, membership.membership_start_date, membership.membership_end_date,
+    IFNULL(pause_history.id,0) AS is_pause
     FROM users 
     INNER JOIN membership ON membership.user_id = users.id
+    LEFT JOIN pause_history ON users.id = pause_history.user_id AND pause_history.pause_start <= '${date}' AND pause_history.pause_end >='${date}' 
     WHERE users.id= '${member_id}'`
 
     query.executeQuery(query_str)
