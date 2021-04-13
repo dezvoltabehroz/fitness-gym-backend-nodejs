@@ -143,11 +143,13 @@ exports.deleteUser = (req, res) => {
     let query_str_2 = `DELETE FROM pause_history WHERE user_id = '${user_id}'`;
     let query_str_3 = `DELETE FROM membership WHERE user_id = '${user_id}'`;
     let query_str_4 = `DELETE FROM about_user WHERE user_id = '${user_id}'`;
+    let query_str_5 = `DELETE FROM question_answer WHERE user_id = '${user_id}'`;
 
     query.executeQuery(query_str_1)
     query.executeQuery(query_str_2)
     query.executeQuery(query_str_3)
     query.executeQuery(query_str_4)
+    query.executeQuery(query_str_5)
 
     common.resOnSuccess(res, true, "Delete successfully")
 }
@@ -182,6 +184,41 @@ exports.updateUser = (req, res) => {
                     data.push(userUpdated)
                     data.push(memberUpdated)
                     common.resOnSuccess(res, true, "Profile has been updated successfully", data)
+                })
+                .catch(err => common.resOnError(res, false, err))
+        })
+        .catch(err => common.resOnError(res, false, err))
+
+}
+
+// Add User Helper
+exports.addUser = (req, res) => {
+    const { first_name, last_name, age, dob, phone, emergency_num, email, address, membership_type, gender, answers_list } = req.body;
+
+    let query_insert_users = `INSERT INTO users(first_name, last_name, age, dob, phone, emergency_num, email, address, gender) values 
+    ('${first_name}','${last_name}','${age}','${dob}','${phone}','${emergency_num}','${email}','${address}','${gender}')`
+
+
+    query.executeQuery(query_insert_users)
+        .then(userData => {
+            let user_id = userData.insertId
+            let query_insert_membership = `INSERT INTO membership(membership_type,user_id) values ('${membership_type}','${user_id}')`;
+            query.executeQuery(query_insert_membership)
+                .then(membershipData => {
+                    if (membershipData.affectedRows == 1) {
+                        let str_query = `INSERT INTO question_answer (question_id,answer,user_id) VALUES `
+                        answers_list.map((quesData, index) => {
+                            str_query = str_query.concat(',', `('${quesData.question_id}', "${quesData.answer}", '${user_id}')`)
+                            if (answers_list.length == (index + 1)) {
+                                var resQuery = str_query.replace("VALUES ,(", "VALUES (");
+                                query.executeQuery(resQuery)
+                                    .then(ansData => {
+                                        if (ansData.affectedRows >= 1)
+                                            common.resOnSuccess(res, true, "Trainee has been added successfully", {})
+                                    })
+                            }
+                        })
+                    }
                 })
                 .catch(err => common.resOnError(res, false, err))
         })

@@ -26,3 +26,6 @@ exports.deleteUser = (req, res) => { return adminHelper.deleteUser(req, res) }
 
 //Update User Controller
 exports.updateUser = (req, res) => { return adminHelper.updateUser(req, res) }
+
+//Add User Controller
+exports.addUser = (req, res) => { return adminHelper.addUser(req, res) }

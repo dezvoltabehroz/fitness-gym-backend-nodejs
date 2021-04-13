@@ -34,4 +34,7 @@ router.post('/deleteUser', CommonMiddleware.authenticateToken, adminController.d
 // Update User API 
 router.post('/updateUser', CommonMiddleware.authenticateToken, adminController.updateUser);
 
+// Add User API 
+router.post('/addUser', CommonMiddleware.authenticateToken, adminController.addUser);
+
 module.exports = router;
