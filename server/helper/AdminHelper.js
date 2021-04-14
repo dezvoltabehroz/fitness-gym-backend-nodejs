@@ -274,7 +274,7 @@ exports.listAllBooking = (req, res) => {
                             if (slotData.booked_slots == 4)
                                 full_slots.push(slotData)
 
-                            if (slotData.booked_slots > 0 && slotData.booked_slots < 4)
+                            if (slotData.booked_slots < 4)
                                 available_slots.push(slotData)
 
                             if (result.length == (index + 1)) {
