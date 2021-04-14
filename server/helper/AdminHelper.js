@@ -267,7 +267,6 @@ exports.listAllBooking = (req, res) => {
                 let data_schedule = scheduleData[0];
                 bookingSlots(date, data_schedule.start_time, data_schedule.end_time)
                     .then(result => {
-                        common.resOnSuccess(res, true, "Booking List has been fetched successfully", result)
                         result.map((slotData, index) => {
                             if (slotData.is_blocked == 1)
                                 blocked_slots.push(slotData)
@@ -275,14 +274,13 @@ exports.listAllBooking = (req, res) => {
                             if (slotData.booked_slots == 4)
                                 full_slots.push(slotData)
 
-                            if (slotData.booked_slots < 4)
+                            if (slotData.booked_slots > 0 && slotData.booked_slots < 4)
                                 available_slots.push(slotData)
 
-                            if(result.length == (index + 1))
-                            {
+                            if (result.length == (index + 1)) {
                                 let objJson = {
-                                    all_slots : result,
-                                    blocked_slots:blocked_slots,
+                                    all_slots: result,
+                                    blocked_slots: blocked_slots,
                                     full_slots: full_slots,
                                     available_slots: available_slots
                                 }
