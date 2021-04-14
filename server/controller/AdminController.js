@@ -29,3 +29,6 @@ exports.updateUser = (req, res) => { return adminHelper.updateUser(req, res) }
 
 //Add User Controller
 exports.addUser = (req, res) => { return adminHelper.addUser(req, res) }
+
+//Exercise Plan Controller
+exports.exercisePlan = (req, res) => { return adminHelper.exercisePlan(req, res) }

@@ -226,6 +226,38 @@ exports.addUser = (req, res) => {
 
 }
 
+// Exercise Plan Helper
+exports.exercisePlan = (req, res) => {
+    const { date } = req.body;
+    let userArray = [];
+
+    let query_str = `SELECT wp.id,wpe.id AS exercise_id,wpe.exercise_name,wpe.exercise_duration,wpe.exercise_details
+    FROM week_plan wp
+    INNER JOIN week_plan_exercise wpe ON wp.id = wpe.plan_id
+    WHERE plan_start <='${date}' AND plan_end >='${date}'`
+
+    query.executeQuery(query_str)
+        .then(planData => {
+            if (planData.length > 0) {
+                planData.map((plan, index) => {
+                    let count_query = `SELECT COUNT(*) AS user_count FROM week_plan_users WHERE exercise_id = '${plan.exercise_id}'`
+                    query.executeQuery(count_query)
+                        .then(countData => {
+                            plan.user_count = countData[0].user_count
+                            userArray.push(plan)
+
+                            if (planData.length == (index + 1))
+                                common.resOnSuccess(res, true, "Trainee has been added successfully", userArray)
+                        })
+                })
+            }
+            else
+                common.resOnError(res, false, "No Record Found")
+        })
+        .catch(err => common.resOnError(res, false, err))
+
+}
+
 // ============================================================== Function ==============================================================
 function bookingSlots(date, start_time, end_time) {
     return new Promise((resolve, reject) => {

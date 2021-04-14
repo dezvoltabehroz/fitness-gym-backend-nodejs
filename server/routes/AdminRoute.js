@@ -37,4 +37,7 @@ router.post('/updateUser', CommonMiddleware.authenticateToken, adminController.u
 // Add User API 
 router.post('/addUser', CommonMiddleware.authenticateToken, adminController.addUser);
 
+// Exercise Plan API 
+router.post('/exercisePlan', CommonMiddleware.authenticateToken, adminController.exercisePlan);
+
 module.exports = router;
