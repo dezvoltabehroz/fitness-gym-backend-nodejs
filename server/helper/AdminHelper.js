@@ -37,8 +37,6 @@ exports.analytics = (req, res) => {
     const { date } = req.body
     let query_str = `SELECT * FROM schedules WHERE schedule_date = '${date}'`
 
-    let booked_slots = 0, full_slots = 0, empty_slots = 0, blocked_slots = 0;
-
     query.executeQuery(query_str)
         .then(scheduleData => {
             if (scheduleData.length > 0) {
@@ -255,7 +253,49 @@ exports.exercisePlan = (req, res) => {
                 common.resOnError(res, false, "No Record Found")
         })
         .catch(err => common.resOnError(res, false, err))
+}
 
+// List All Booking Helper
+exports.listAllBooking = (req, res) => {
+    const { date } = req.body;
+    let available_slots = [], full_slots = [], blocked_slots = [];
+    let query_str = `SELECT * FROM schedules WHERE schedule_date = '${date}'`
+
+    query.executeQuery(query_str)
+        .then(scheduleData => {
+            if (scheduleData.length > 0) {
+                let data_schedule = scheduleData[0];
+                bookingSlots(date, data_schedule.start_time, data_schedule.end_time)
+                    .then(result => {
+                        common.resOnSuccess(res, true, "Booking List has been fetched successfully", result)
+                        result.map((slotData, index) => {
+                            if (slotData.is_blocked == 1)
+                                blocked_slots.push(slotData)
+
+                            if (slotData.booked_slots == 4)
+                                full_slots.push(slotData)
+
+                            if (slotData.booked_slots < 4)
+                                available_slots.push(slotData)
+
+                            if(result.length == (index + 1))
+                            {
+                                let objJson = {
+                                    all_slots : result,
+                                    blocked_slots:blocked_slots,
+                                    full_slots: full_slots,
+                                    available_slots: available_slots
+                                }
+                                common.resOnSuccess(res, true, "Booking List has been fetched successfully", objJson)
+                            }
+                        })
+                    })
+                    .catch(err => common.resOnError(res, false, err))
+            }
+            else
+                common.resOnError(res, false, "No Record Found")
+        })
+        .catch(err => common.resOnError(res, false, err))
 }
 
 // ============================================================== Function ==============================================================

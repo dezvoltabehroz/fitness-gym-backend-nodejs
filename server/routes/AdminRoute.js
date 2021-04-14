@@ -40,4 +40,7 @@ router.post('/addUser', CommonMiddleware.authenticateToken, adminController.addU
 // Exercise Plan API 
 router.post('/exercisePlan', CommonMiddleware.authenticateToken, adminController.exercisePlan);
 
+// List Booking API 
+router.post('/listAllBooking', CommonMiddleware.authenticateToken, adminController.listAllBooking);
+
 module.exports = router;
