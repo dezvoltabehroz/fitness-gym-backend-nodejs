@@ -46,4 +46,7 @@ router.post('/listAllBooking', CommonMiddleware.authenticateToken, adminControll
 // List All Schedules API 
 router.post('/listAllSchedules', CommonMiddleware.authenticateToken, adminController.listAllSchedules);
 
+// Delete Schedules API 
+router.post('/deleteSchedules', CommonMiddleware.authenticateToken, adminController.deleteSchedules);
+
 module.exports = router;

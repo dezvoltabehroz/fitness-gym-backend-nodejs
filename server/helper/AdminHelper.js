@@ -303,7 +303,23 @@ exports.listAllSchedules = (req, res) => {
     query.executeQuery(query_str)
         .then(scheduleData => {
             if (scheduleData.length > 0) {
-                common.resOnSuccess(res, true, "Booking List has been fetched successfully", scheduleData)
+                common.resOnSuccess(res, true, "Schedules List has been fetched successfully", scheduleData)
+            }
+            else
+                common.resOnError(res, false, "No Record Found")
+        })
+        .catch(err => common.resOnError(res, false, err))
+}
+
+// Delete Schedules Helper
+exports.deleteSchedules = (req, res) => {
+    const { id } = req.body;
+    let query_str = `delete FROM schedules where id = '${id}'`
+
+    query.executeQuery(query_str)
+        .then(scheduleData => {
+            if (scheduleData.length > 0) {
+                common.resOnSuccess(res, true, "Deleted successfully", scheduleData)
             }
             else
                 common.resOnError(res, false, "No Record Found")

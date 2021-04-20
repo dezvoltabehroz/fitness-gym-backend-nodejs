@@ -38,3 +38,6 @@ exports.listAllBooking = (req, res) => { return adminHelper.listAllBooking(req, 
 
 //List All Schedules Controller
 exports.listAllSchedules = (req, res) => { return adminHelper.listAllSchedules(req, res) }
+
+//Delete Schedules Controller
+exports.deleteSchedules = (req, res) => { return adminHelper.deleteSchedules(req, res) }
