@@ -35,3 +35,6 @@ exports.exercisePlan = (req, res) => { return adminHelper.exercisePlan(req, res)
 
 //List All Booking Controller
 exports.listAllBooking = (req, res) => { return adminHelper.listAllBooking(req, res) }
+
+//List All Schedules Controller
+exports.listAllSchedules = (req, res) => { return adminHelper.listAllSchedules(req, res) }

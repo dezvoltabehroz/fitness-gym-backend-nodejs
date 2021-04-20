@@ -43,4 +43,7 @@ router.post('/exercisePlan', CommonMiddleware.authenticateToken, adminController
 // List Booking API 
 router.post('/listAllBooking', CommonMiddleware.authenticateToken, adminController.listAllBooking);
 
+// List All Schedules API 
+router.post('/listAllSchedules', CommonMiddleware.authenticateToken, adminController.listAllSchedules);
+
 module.exports = router;

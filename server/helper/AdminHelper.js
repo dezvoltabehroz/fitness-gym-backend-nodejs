@@ -296,6 +296,21 @@ exports.listAllBooking = (req, res) => {
         .catch(err => common.resOnError(res, false, err))
 }
 
+// List All Booking Helper
+exports.listAllSchedules = (req, res) => {
+    let query_str = `SELECT * FROM schedules`
+
+    query.executeQuery(query_str)
+        .then(scheduleData => {
+            if (scheduleData.length > 0) {
+                common.resOnSuccess(res, true, "Booking List has been fetched successfully", scheduleData)
+            }
+            else
+                common.resOnError(res, false, "No Record Found")
+        })
+        .catch(err => common.resOnError(res, false, err))
+}
+
 // ============================================================== Function ==============================================================
 function bookingSlots(date, start_time, end_time) {
     return new Promise((resolve, reject) => {
