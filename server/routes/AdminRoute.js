@@ -52,4 +52,7 @@ router.post('/deleteSchedules', CommonMiddleware.authenticateToken, adminControl
 // Add Schedules API 
 router.post('/addSchedules', CommonMiddleware.authenticateToken, adminController.addSchedules);
 
+// Edit Schedules API 
+router.post('/editSchedules', CommonMiddleware.authenticateToken, adminController.editSchedules);
+
 module.exports = router;

@@ -44,3 +44,6 @@ exports.deleteSchedules = (req, res) => { return adminHelper.deleteSchedules(req
 
 //Add Schedules Controller
 exports.addSchedules = (req, res) => { return adminHelper.addSchedules(req, res) }
+
+//Edit Schedules Controller
+exports.editSchedules = (req, res) => { return adminHelper.editSchedules(req, res) }

@@ -330,7 +330,19 @@ exports.addSchedules = (req, res) => {
 
     query.executeQuery(query_str)
         .then(scheduleData => {
-                common.resOnSuccess(res, true, "Schedules has been added successfully", scheduleData)
+            common.resOnSuccess(res, true, "Schedules has been added successfully", scheduleData)
+        })
+        .catch(err => common.resOnError(res, false, err))
+}
+
+// Edit Schedules Helper
+exports.editSchedules = (req, res) => {
+    const { id, day, start_time, end_time } = req.body;
+    let query_str = `update schedules set day='${day}',start_time=${start_time}, end_time=${end_time} where id = '${id}'`
+
+    query.executeQuery(query_str)
+        .then(scheduleData => {
+            common.resOnSuccess(res, true, "Schedules has been updated successfully", scheduleData)
         })
         .catch(err => common.resOnError(res, false, err))
 }
