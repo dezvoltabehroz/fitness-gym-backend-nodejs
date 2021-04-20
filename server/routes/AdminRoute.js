@@ -49,4 +49,7 @@ router.post('/listAllSchedules', CommonMiddleware.authenticateToken, adminContro
 // Delete Schedules API 
 router.post('/deleteSchedules', CommonMiddleware.authenticateToken, adminController.deleteSchedules);
 
+// Add Schedules API 
+router.post('/addSchedules', CommonMiddleware.authenticateToken, adminController.addSchedules);
+
 module.exports = router;

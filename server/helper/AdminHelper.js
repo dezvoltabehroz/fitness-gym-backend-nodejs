@@ -318,11 +318,19 @@ exports.deleteSchedules = (req, res) => {
 
     query.executeQuery(query_str)
         .then(scheduleData => {
-            if (scheduleData.length > 0) {
-                common.resOnSuccess(res, true, "Deleted successfully", scheduleData)
-            }
-            else
-                common.resOnError(res, false, "No Record Found")
+            common.resOnSuccess(res, true, "Deleted successfully", scheduleData)
+        })
+        .catch(err => common.resOnError(res, false, err))
+}
+
+// Add Schedules Helper
+exports.addSchedules = (req, res) => {
+    const { day, start_time, end_time } = req.body;
+    let query_str = `INSERT INTO schedules (day,start_time,end_time,trainer_id,is_off) VALUES ('${day}','${start_time}','${end_time}','1','0'),`
+
+    query.executeQuery(query_str)
+        .then(scheduleData => {
+                common.resOnSuccess(res, true, "Schedules has been added successfully", scheduleData)
         })
         .catch(err => common.resOnError(res, false, err))
 }
