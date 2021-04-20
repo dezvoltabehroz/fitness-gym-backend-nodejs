@@ -193,8 +193,8 @@ exports.updateUser = (req, res) => {
 exports.addUser = (req, res) => {
     const { first_name, last_name, age, dob, phone, emergency_num, email, address, membership_type, gender, answers_list } = req.body;
 
-    let query_insert_users = `INSERT INTO users(first_name, last_name, age, dob, phone, emergency_num, email, address, gender) values 
-    ('${first_name}','${last_name}','${age}','${dob}','${phone}','${emergency_num}','${email}','${address}','${gender}')`
+    let query_insert_users = `INSERT INTO users(first_name, last_name, age, dob, phone, emergency_num, email, address, gender, full_name) values 
+    ('${first_name}','${last_name}','${age}','${dob}','${phone}','${emergency_num}','${email}','${address}','${gender}','${first_name} ${last_name}')`
 
 
     query.executeQuery(query_insert_users)
