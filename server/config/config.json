@@ -21,7 +21,7 @@
             "queueLimit": 0,
             "host": "127.0.0.1",
             "user": "root",
-            "password": "educo_*gym",
+            "password": "",
             "database": "educogym",
             "port": 3306,
             "connector": "mysql",
@@ -31,9 +31,9 @@
     },
     "nodeMailer": {
         "from": "support@educogym.com",
-        "host": "smtp.dreamhost.com",
-        "email": "no-reply@fleekservices.com",
-        "emailPass": "Admin@1357@"
+        "host": "smtp.gmail.com",
+        "email": "eccles.educogym@gmail.com",
+        "emailPass": "Eccles@123"
     },
     "notification": {
         "title": "Educo GYM"

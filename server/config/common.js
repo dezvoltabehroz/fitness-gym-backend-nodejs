@@ -65,7 +65,7 @@ module.exports = {
         var mailOptions = {
             from: config.nodeMailer.from,
             to: toEmail,
-            subject: `💌 Educo Gym Verification Code`,
+            subject: `Educo Gym Verification Code`,
             html: `
             <p>
                 <b><i>Your verification code: ${code}</i></b>
