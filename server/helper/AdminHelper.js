@@ -326,7 +326,7 @@ exports.deleteSchedules = (req, res) => {
 // Add Schedules Helper
 exports.addSchedules = (req, res) => {
     const { day, start_time, end_time, schedule_date } = req.body;
-    let query_str = `INSERT INTO schedules (day,start_time,end_time,schedule_date,trainer_id,is_off) VALUES ('${day}','${start_time}','${end_time}','${schedule_date}','1','0'),`
+    let query_str = `INSERT INTO schedules (day,start_time,end_time,schedule_date,trainer_id,is_off) VALUES ('${day}','${start_time}','${end_time}','${schedule_date}','1','0')`
 
     query.executeQuery(query_str)
         .then(scheduleData => {
