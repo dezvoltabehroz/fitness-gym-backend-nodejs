@@ -34,14 +34,20 @@ exports.getBookings = (req, res) => {
                                     slotData.isBreak = true;
                                     newArraySlots.push(slotData)
                                     if (result.length == (index + 1)) {
-                                        common.resOnSuccess(res, true, "Booking List has been fetched successfully", newArraySlots)
+                                        filteringArrays(newArraySlots)
+                                            .then(filterArray => {
+                                                common.resOnSuccess(res, true, "Booking List has been fetched successfully", filterArray)
+                                            })
                                     }
                                 }
                                 else {
                                     slotData.isBreak = false;
                                     newArraySlots.push(slotData)
                                     if (result.length == (index + 1)) {
-                                        common.resOnSuccess(res, true, "Booking List has been fetched successfully", newArraySlots)
+                                        filteringArrays(newArraySlots)
+                                            .then(filterArray => {
+                                                common.resOnSuccess(res, true, "Booking List has been fetched successfully", filterArray)
+                                            })
                                     }
                                 }
                             })
@@ -67,14 +73,20 @@ exports.getBookings = (req, res) => {
                                     slotData.isBreak = true;
                                     newArraySlots.push(slotData)
                                     if (result.length == (index + 1)) {
-                                        common.resOnSuccess(res, true, "Booking List has been fetched successfully", newArraySlots)
+                                        filteringArrays(newArraySlots)
+                                            .then(filterArray => {
+                                                common.resOnSuccess(res, true, "Booking List has been fetched successfully", filterArray)
+                                            })
                                     }
                                 }
                                 else {
                                     slotData.isBreak = false;
                                     newArraySlots.push(slotData)
                                     if (result.length == (index + 1)) {
-                                        common.resOnSuccess(res, true, "Booking List has been fetched successfully", newArraySlots)
+                                        filteringArrays(newArraySlots)
+                                            .then(filterArray => {
+                                                common.resOnSuccess(res, true, "Booking List has been fetched successfully", filterArray)
+                                            })
                                     }
                                 }
                             })
@@ -202,4 +214,31 @@ function addMinutes(time, minutes) {
         ((date.getMinutes().toString().length == 1) ? '0' + date.getMinutes() : date.getMinutes()) + ':' +
         ((date.getSeconds().toString().length == 1) ? '0' + date.getSeconds() : date.getSeconds());
     return tempTime;
+}
+
+function filteringArrays(result) {
+    return new Promise((resolve, reject) => {
+        let available_slots = [], full_slots = [], blocked_slots = [];
+
+        result.map((slotData, index) => {
+            if (slotData.is_blocked == 1)
+                blocked_slots.push(slotData)
+
+            if (slotData.booked_slots == 4)
+                full_slots.push(slotData)
+
+            if (slotData.booked_slots < 4)
+                available_slots.push(slotData)
+
+            if (result.length == (index + 1)) {
+                let objJson = {
+                    all_slots: result,
+                    blocked_slots: blocked_slots,
+                    full_slots: full_slots,
+                    available_slots: available_slots
+                }
+                resolve(objJson)
+            }
+        })
+    })
 }
