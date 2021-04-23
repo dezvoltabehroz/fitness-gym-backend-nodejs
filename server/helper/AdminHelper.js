@@ -14,6 +14,21 @@ exports.health = (req, res) => {
     res.status(200).json({ message: "Its Working", datetime: Date.now() });
 }
 
+// Login Admin Helper
+exports.loginAdmin = (req, res) => {
+    const {email,password} = req.body
+    let query_str = `select * from users where email = '${email}' and password = '${password}'`
+
+    query.executeQuery(query_str)
+        .then(queryResult => {
+            if (queryResult.length == 1)
+                common.resOnSuccess(res, true, "User Profile has been fetched successfully", queryResult[0])
+            else
+                common.resOnError(res, false, "No Record Found")
+        })
+        .catch(err => common.resOnError(res, false, err))
+}
+
 // User Profile Helper
 exports.userProfile = (req, res) => {
     const { id } = req.body

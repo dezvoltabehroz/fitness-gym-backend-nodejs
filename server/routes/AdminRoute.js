@@ -13,6 +13,9 @@ var adminController = require('../controller/AdminController');
 //Health API 
 router.get('/health', CommonMiddleware.pass, adminController.pass);
 
+// Login Admin API 
+router.post('/loginAdmin', CommonMiddleware.pass, adminController.loginAdmin);
+
 //User Profile API 
 router.post('/userProfile', CommonMiddleware.authenticateToken, adminController.userProfile);
 

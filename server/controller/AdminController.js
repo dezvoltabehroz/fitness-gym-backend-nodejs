@@ -6,6 +6,9 @@ var adminHelper = require('../helper/AdminHelper');
 //Pass Controller
 exports.pass = (req, res) => { return adminHelper.health(req, res) }
 
+//Login Admin Controller
+exports.loginAdmin = (req, res) => { return adminHelper.loginAdmin(req, res) }
+
 //User Profile Controller
 exports.userProfile = (req, res) => { return adminHelper.userProfile(req, res) }
 
