@@ -349,6 +349,18 @@ exports.editSchedules = (req, res) => {
         .catch(err => common.resOnError(res, false, err))
 }
 
+// Block Slots Helper
+exports.blockSlots = (req, res) => {
+    const { booking_date, booking_start_time, booking_end_time } = req.body;
+    let query_str = `insert into booking(booking_date,booking_start_time,booking_end_time,is_blocked) values ('${booking_date}','${booking_start_time}','${booking_end_time}','1')`
+
+    query.executeQuery(query_str)
+        .then(bookingData => {
+            common.resOnSuccess(res, true, "Booking has been Blocked successfully", bookingData)
+        })
+        .catch(err => common.resOnError(res, false, err))
+}
+
 // ============================================================== Function ==============================================================
 function bookingSlots(date, start_time, end_time) {
     return new Promise((resolve, reject) => {

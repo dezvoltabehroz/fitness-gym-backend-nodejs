@@ -47,3 +47,6 @@ exports.addSchedules = (req, res) => { return adminHelper.addSchedules(req, res)
 
 //Edit Schedules Controller
 exports.editSchedules = (req, res) => { return adminHelper.editSchedules(req, res) }
+
+//Block Slots Controller
+exports.blockSlots = (req, res) => { return adminHelper.blockSlots(req, res) }

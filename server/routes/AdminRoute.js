@@ -55,4 +55,7 @@ router.post('/addSchedules', CommonMiddleware.authenticateToken, adminController
 // Edit Schedules API 
 router.post('/editSchedules', CommonMiddleware.authenticateToken, adminController.editSchedules);
 
+// Block Slots API 
+router.post('/blockSlots', CommonMiddleware.authenticateToken, adminController.blockSlots);
+
 module.exports = router;
