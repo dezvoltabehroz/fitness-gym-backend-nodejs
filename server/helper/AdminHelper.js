@@ -325,8 +325,9 @@ exports.deleteSchedules = (req, res) => {
 
 // Add Schedules Helper
 exports.addSchedules = (req, res) => {
-    const { day, start_time, end_time, schedule_date } = req.body;
-    let query_str = `INSERT INTO schedules (day,start_time,end_time,schedule_date,trainer_id,is_off) VALUES ('${day}','${start_time}','${end_time}','${schedule_date}','1','0')`
+    const { day, start_time, end_time, schedule_date, break_start_time, break_end_time } = req.body;
+    let query_str = `INSERT INTO schedules (day,start_time,end_time,schedule_date,trainer_id,is_off,break_start_time, break_end_time) 
+    VALUES ('${day}','${start_time}','${end_time}','${schedule_date}','1','0','${break_start_time}', '${break_end_time}')`
 
     query.executeQuery(query_str)
         .then(scheduleData => {
@@ -337,8 +338,9 @@ exports.addSchedules = (req, res) => {
 
 // Edit Schedules Helper
 exports.editSchedules = (req, res) => {
-    const { id, day, start_time, end_time, schedule_date } = req.body;
-    let query_str = `update schedules set day='${day}',start_time='${start_time}', end_time='${end_time}',schedule_date='${schedule_date}' where id = '${id}'`
+    const { id, day, start_time, end_time, schedule_date, break_start_time, break_end_time } = req.body;
+    let query_str = `update schedules set day='${day}',start_time='${start_time}', end_time='${end_time}',schedule_date='${schedule_date}',
+    break_start_time = '${break_start_time}', break_end_time = '${break_end_time}' where id = '${id}'`
 
     query.executeQuery(query_str)
         .then(scheduleData => {
