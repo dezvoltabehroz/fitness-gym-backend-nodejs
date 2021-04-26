@@ -285,7 +285,7 @@ exports.listAllBooking = (req, res) => {
                         result.map((slotData, index) => {
                             slotData.userAdded = [
                                 { user_id: '1', full_name: "Behroz Ahmed" },
-                                { user_id: '2', full_name: "Mudassar Shahbaz" },
+                                { user_id: '2', full_name: "Mudassar Shahbaz" }
                             ]
                             if (slotData.is_blocked == 1)
                                 blocked_slots.push(slotData)
