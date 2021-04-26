@@ -61,4 +61,10 @@ router.post('/editSchedules', CommonMiddleware.authenticateToken, adminControlle
 // Block Slots API 
 router.post('/blockSlots', CommonMiddleware.authenticateToken, adminController.blockSlots);
 
+// List All Customer API 
+router.post('/listAllCustomer', CommonMiddleware.authenticateToken, adminController.listAllCustomer);
+
+// Make Booking for User API 
+router.post('/makeBookingForUser', CommonMiddleware.authenticateToken, adminController.makeBookingForUser);
+
 module.exports = router;

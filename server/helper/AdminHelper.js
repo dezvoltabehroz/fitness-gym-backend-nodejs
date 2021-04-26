@@ -16,7 +16,7 @@ exports.health = (req, res) => {
 
 // Login Admin Helper
 exports.loginAdmin = (req, res) => {
-    const {email,password} = req.body
+    const { email, password } = req.body
     let query_str = `select * from users where email = '${email}' and password = '${password}'`
 
     query.executeQuery(query_str)
@@ -372,6 +372,33 @@ exports.blockSlots = (req, res) => {
     query.executeQuery(query_str)
         .then(bookingData => {
             common.resOnSuccess(res, true, "Booking has been Blocked successfully", bookingData)
+        })
+        .catch(err => common.resOnError(res, false, err))
+}
+
+// List All Customer Helper
+exports.listAllCustomer = (req, res) => {
+    let query_str = `select id,first_name,last_name from users where user_type = 'user'`
+
+    query.executeQuery(query_str)
+        .then(customerData => {
+            if (customerData.length > 0)
+                common.resOnSuccess(res, true, "Customer data has been fetched successfully", customerData)
+            else
+                common.resOnError(res, false, err)
+        })
+        .catch(err => common.resOnError(res, false, err))
+}
+
+// Make Booking for User Helper
+exports.makeBookingForUser = (req, res) => {
+    const { booking_date, booking_start_time, booking_end_time, customer_id } = req.body;
+    let query_str = `insert into booking(booking_date,booking_start_time,booking_end_time,customer_id) 
+    values ('${booking_date}','${booking_start_time}','${booking_end_time}','${customer_id}')`
+
+    query.executeQuery(query_str)
+        .then(bookingData => {
+            common.resOnSuccess(res, true, "Booking has been added successfully", bookingData)
         })
         .catch(err => common.resOnError(res, false, err))
 }

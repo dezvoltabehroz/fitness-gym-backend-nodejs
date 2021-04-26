@@ -53,3 +53,9 @@ exports.editSchedules = (req, res) => { return adminHelper.editSchedules(req, re
 
 //Block Slots Controller
 exports.blockSlots = (req, res) => { return adminHelper.blockSlots(req, res) }
+
+// List All Customer Controller
+exports.listAllCustomer = (req, res) => { return adminHelper.listAllCustomer(req, res) }
+
+// Make Booking for User Controller
+exports.makeBookingForUser = (req, res) => { return adminHelper.makeBookingForUser(req, res) }
