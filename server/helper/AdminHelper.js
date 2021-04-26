@@ -446,7 +446,7 @@ exports.makeBookingForUser = (req, res) => {
 // Un Block Slots Helper
 exports.unBlockSlots = (req, res) => {
     const { booking_date, booking_start_time, booking_end_time } = req.body;
-    let query_str = `update booking set is_blocked = 0 where booking_date =  '${booking_date}' and booking_start_time = '${booking_start_time}' and booking_end_time '${booking_end_time}'`
+    let query_str = `update booking set is_blocked = 0 where booking_date =  '${booking_date}' and booking_start_time = '${booking_start_time}' and booking_end_time = '${booking_end_time}'`
 
     query.executeQuery(query_str)
         .then(bookingData => {
