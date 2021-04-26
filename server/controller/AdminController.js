@@ -59,3 +59,6 @@ exports.listAllCustomer = (req, res) => { return adminHelper.listAllCustomer(req
 
 // Make Booking for User Controller
 exports.makeBookingForUser = (req, res) => { return adminHelper.makeBookingForUser(req, res) }
+
+// Un Block Slots Controller
+exports.unBlockSlots = (req, res) => { return adminHelper.unBlockSlots(req, res) }

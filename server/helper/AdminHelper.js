@@ -276,36 +276,72 @@ exports.listAllBooking = (req, res) => {
     let available_slots = [], full_slots = [], blocked_slots = [];
     let query_str = `SELECT * FROM schedules WHERE schedule_date = '${date}'`
 
+    let query_total = `SELECT COUNT(*) AS total FROM booking WHERE booking_date = '${date}'`
+
     query.executeQuery(query_str)
         .then(scheduleData => {
             if (scheduleData.length > 0) {
                 let data_schedule = scheduleData[0];
                 bookingSlots(date, data_schedule.start_time, data_schedule.end_time)
                     .then(result => {
-                        result.map((slotData, index) => {
-                            slotData.userAdded = [
-                                { user_id: '1', full_name: "Behroz Ahmed" },
-                                { user_id: '2', full_name: "Mudassar Shahbaz" }
-                            ]
-                            if (slotData.is_blocked == 1)
-                                blocked_slots.push(slotData)
+                        query.executeQuery(query_total)
+                            .then(resData => {
+                                if (resData[0].total > 0) {
+                                    result.map((slotData, index) => {
+                                        let query_booking_user = `
+                                        SELECT users.id AS user_id,CONCAT(users.first_name,' ',users.last_name) AS full_name
+                                        FROM users
+                                        INNER JOIN booking ON booking.customer_id = users.id
+                                        WHERE booking.booking_date = '${date}' AND booking.booking_start_time = '${slotData.booking_start_time}' AND booking_end_time='${slotData.booking_end_time}'`
+                                        query.executeQuery(query_booking_user)
+                                            .then(dbUsers => {
+                                                slotData.userAdded = dbUsers
 
-                            if (slotData.booked_slots == 4)
-                                full_slots.push(slotData)
+                                                if (slotData.is_blocked == 1)
+                                                    blocked_slots.push(slotData)
 
-                            if (slotData.booked_slots < 4)
-                                available_slots.push(slotData)
+                                                if (slotData.booked_slots == 4)
+                                                    full_slots.push(slotData)
 
-                            if (result.length == (index + 1)) {
-                                let objJson = {
-                                    all_slots: result,
-                                    blocked_slots: blocked_slots,
-                                    full_slots: full_slots,
-                                    available_slots: available_slots
+                                                if (slotData.booked_slots < 4)
+                                                    available_slots.push(slotData)
+
+                                                if (result.length == (index + 1)) {
+                                                    let objJson = {
+                                                        all_slots: result,
+                                                        blocked_slots: blocked_slots,
+                                                        full_slots: full_slots,
+                                                        available_slots: available_slots
+                                                    }
+                                                    common.resOnSuccess(res, true, "Booking List has been fetched successfully", objJson)
+                                                }
+                                            })
+                                    })
                                 }
-                                common.resOnSuccess(res, true, "Booking List has been fetched successfully", objJson)
-                            }
-                        })
+                                else {
+                                    result.map((slotData, index) => {
+                                        slotData.userAdded = []
+                                        if (slotData.is_blocked == 1)
+                                            blocked_slots.push(slotData)
+
+                                        if (slotData.booked_slots == 4)
+                                            full_slots.push(slotData)
+
+                                        if (slotData.booked_slots < 4)
+                                            available_slots.push(slotData)
+
+                                        if (result.length == (index + 1)) {
+                                            let objJson = {
+                                                all_slots: result,
+                                                blocked_slots: blocked_slots,
+                                                full_slots: full_slots,
+                                                available_slots: available_slots
+                                            }
+                                            common.resOnSuccess(res, true, "Booking List has been fetched successfully", objJson)
+                                        }
+                                    })
+                                }
+                            })
                     })
                     .catch(err => common.resOnError(res, false, err))
             }
@@ -403,6 +439,18 @@ exports.makeBookingForUser = (req, res) => {
     query.executeQuery(query_str)
         .then(bookingData => {
             common.resOnSuccess(res, true, "Booking has been added successfully", bookingData)
+        })
+        .catch(err => common.resOnError(res, false, err))
+}
+
+// Un Block Slots Helper
+exports.unBlockSlots = (req, res) => {
+    const { booking_date, booking_start_time, booking_end_time } = req.body;
+    let query_str = `update booking set is_blocked = 0 where booking_date =  '${booking_date}' and booking_start_time = '${booking_start_time}' and booking_end_time '${booking_end_time}'`
+
+    query.executeQuery(query_str)
+        .then(bookingData => {
+            common.resOnSuccess(res, true, "Slots has been un blocked successfully", bookingData)
         })
         .catch(err => common.resOnError(res, false, err))
 }
