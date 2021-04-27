@@ -57,19 +57,22 @@ exports.loginTrainee = (req, res) => {
     query.executeQuery(login_query)
         .then(userData => {
             if (userData.length > 0) {
-                bcrypt.compare(password, userData[0].password)
-                    .then((result) => {
-                        if (result) {
-                            var token = jwt.sign({ id: userData[0].id }, process.env.SECRET, {
-                                expiresIn: 86400 // expires in 24 hours
-                            });
-                            userData[0].token = token;
-                            common.resOnSuccess(res, true, "Logged in successfully", userData[0])
-                        }
-                        else {
-                            common.resOnError(res, false, "Password is not correct")
-                        }
-                    });
+                userData.map((user_data, index) => {
+                    bcrypt.compare(password, user_data.password)
+                        .then((result) => {
+                            if (result) {
+                                var token = jwt.sign({ id: user_data.id }, process.env.SECRET, {
+                                    expiresIn: 86400 // expires in 24 hours
+                                });
+                                user_data.token = token;
+                                common.resOnSuccess(res, true, "Logged in successfully", user_data)
+                            }
+                            else {
+                                if (userData.length == (index + 1))
+                                    common.resOnError(res, false, "Password is not correct")
+                            }
+                        });
+                })
             }
             else
                 common.resOnError(res, false, "Email is not correct")

@@ -99,4 +99,39 @@ module.exports = {
             });
         })
     },
+    sendPasswordInEmail(toEmail, password) {
+        var mailOptions = {
+            from: config.nodeMailer.from,
+            to: toEmail,
+            subject: `Educo Gym Password`,
+            html: `
+            <p>
+                <b><i>Your Password for Application : ${password}</i></b>
+            </p>
+            <p>
+                Thank you!<br/>
+                Team Educo Gym<br/>
+                <a href="http://educogymecclesstreet.com/">Educo GYm</a>
+            </p>
+            `
+        };
+
+        const transporter = nodemailer.createTransport({
+            host: config.nodeMailer.host,
+            auth: {
+                user: config.nodeMailer.email,
+                pass: config.nodeMailer.emailPass
+            }
+        })
+
+        return new Promise((resolved, reject) => {
+            transporter.sendMail(mailOptions, function (error, info) {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolved(info.response);
+                }
+            });
+        })
+    },
 }

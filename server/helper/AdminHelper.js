@@ -1,6 +1,8 @@
 'use strict'
 // Get dependencies
 var moment = require("moment");
+var bcrypt = require('bcryptjs');
+var generator = require('generate-password');
 
 // Common Functions File
 var common = require('../config/common')
@@ -208,35 +210,39 @@ exports.updateUser = (req, res) => {
 exports.addUser = (req, res) => {
     const { first_name, last_name, age, dob, phone, emergency_num, email, address, membership_type, gender, answers_list } = req.body;
 
-    let query_insert_users = `INSERT INTO users(first_name, last_name, age, dob, phone, emergency_num, email, address, gender, full_name) values 
-    ('${first_name}','${last_name}','${age}','${dob}','${phone}','${emergency_num}','${email}','${address}','${gender}','${first_name} ${last_name}')`
+    var password = generator.generate({ length: 10, numbers: true });
+    common.sendPasswordInEmail(email, password)
+    bcrypt.hash(password, 10)
+        .then(hashedPassword => {
+            let query_insert_users = `INSERT INTO users(first_name, last_name, age, dob, phone, emergency_num, email, address, gender, full_name,password) values 
+            ('${first_name}','${last_name}','${age}','${dob}','${phone}','${emergency_num}','${email}','${address}','${gender}','${first_name} ${last_name}','${hashedPassword}')`
 
-
-    query.executeQuery(query_insert_users)
-        .then(userData => {
-            let user_id = userData.insertId
-            let query_insert_membership = `INSERT INTO membership(membership_type,user_id) values ('${membership_type}','${user_id}')`;
-            query.executeQuery(query_insert_membership)
-                .then(membershipData => {
-                    if (membershipData.affectedRows == 1) {
-                        let str_query = `INSERT INTO question_answer (question_id,answer,user_id) VALUES `
-                        answers_list.map((quesData, index) => {
-                            str_query = str_query.concat(',', `('${quesData.question_id}', "${quesData.answer}", '${user_id}')`)
-                            if (answers_list.length == (index + 1)) {
-                                var resQuery = str_query.replace("VALUES ,(", "VALUES (");
-                                query.executeQuery(resQuery)
-                                    .then(ansData => {
-                                        if (ansData.affectedRows >= 1)
-                                            common.resOnSuccess(res, true, "Trainee has been added successfully", {})
-                                    })
+            query.executeQuery(query_insert_users)
+                .then(userData => {
+                    let user_id = userData.insertId
+                    let query_insert_membership = `INSERT INTO membership(membership_type,user_id) values ('${membership_type}','${user_id}')`;
+                    query.executeQuery(query_insert_membership)
+                        .then(membershipData => {
+                            if (membershipData.affectedRows == 1) {
+                                let str_query = `INSERT INTO question_answer (question_id,answer,user_id) VALUES `
+                                answers_list.map((quesData, index) => {
+                                    str_query = str_query.concat(',', `('${quesData.question_id}', "${quesData.answer}", '${user_id}')`)
+                                    if (answers_list.length == (index + 1)) {
+                                        var resQuery = str_query.replace("VALUES ,(", "VALUES (");
+                                        query.executeQuery(resQuery)
+                                            .then(ansData => {
+                                                if (ansData.affectedRows >= 1)
+                                                    common.resOnSuccess(res, true, "Trainee has been added successfully", {})
+                                            })
+                                    }
+                                })
                             }
                         })
-                    }
+                        .catch(err => common.resOnError(res, false, err))
                 })
                 .catch(err => common.resOnError(res, false, err))
         })
         .catch(err => common.resOnError(res, false, err))
-
 }
 
 // Exercise Plan Helper
