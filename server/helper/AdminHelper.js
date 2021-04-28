@@ -377,12 +377,16 @@ exports.editSchedules = (req, res) => {
 exports.blockSlots = (req, res) => {
     const { booking_date, booking_start_time, booking_end_time } = req.body;
     let query_str = `insert into booking(booking_date,booking_start_time,booking_end_time,is_blocked) values ('${booking_date}','${booking_start_time}','${booking_end_time}','1')`
+    let query_delete = `delete from booking where booking_date = '${booking_date}' and booking_start_time = '${booking_start_time}' and booking_end_time = '${booking_end_time}'`
 
-    query.executeQuery(query_str)
-        .then(bookingData => {
-            common.resOnSuccess(res, true, "Booking has been Blocked successfully", bookingData)
+    query.executeQuery(query_delete)
+        .then(resDelete => {
+            query.executeQuery(query_str)
+                .then(bookingData => {
+                    common.resOnSuccess(res, true, "Booking has been Blocked successfully", bookingData)
+                })
+                .catch(err => common.resOnError(res, false, err))
         })
-        .catch(err => common.resOnError(res, false, err))
 }
 
 // List All Customer Helper
