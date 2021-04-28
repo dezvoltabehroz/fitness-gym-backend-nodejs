@@ -405,11 +405,20 @@ exports.makeBookingForUser = (req, res) => {
     let query_str = `insert into booking(booking_date,booking_start_time,booking_end_time,customer_id) 
     values ('${booking_date}','${booking_start_time}','${booking_end_time}','${customer_id}')`
 
-    query.executeQuery(query_str)
-        .then(bookingData => {
-            common.resOnSuccess(res, true, "Booking has been added successfully", bookingData)
+    let query_slot_available = `select * from booking where booking_date = '${booking_date}' and booking_start_time= '${booking_start_time}' and booking_end_time= '${booking_end_time}' and customer_id = '${customer_id}'`
+
+    query.executeQuery(query_slot_available)
+        .then(resBooking => {
+            if (resBooking.length > 0) {
+                common.resOnSuccess(res, false, "Booking has already been made", resBooking)
+            } else {
+                query.executeQuery(query_str)
+                    .then(bookingData => {
+                        common.resOnSuccess(res, true, "Booking has been added successfully", bookingData)
+                    })
+                    .catch(err => common.resOnError(res, false, err))
+            }
         })
-        .catch(err => common.resOnError(res, false, err))
 }
 
 // Un Block Slots Helper
