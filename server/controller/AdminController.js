@@ -71,3 +71,6 @@ exports.pendingPauseList = (req, res) => { return adminHelper.pendingPauseList(r
 
 // Accept Pending Pause Request Controller
 exports.acceptPendingRequest = (req, res) => { return adminHelper.acceptPendingRequest(req, res) }
+
+// Cancel Pending Pause Request Controller
+exports.cancelPendingRequest = (req, res) => { return adminHelper.cancelPendingRequest(req, res) }

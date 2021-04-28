@@ -475,6 +475,18 @@ exports.acceptPendingRequest = (req, res) => {
         .catch(err => common.resOnError(res, false, err))
 }
 
+// Cancel Pending Pause Request Helper
+exports.cancelPendingRequest = (req, res) => {
+    const { pause_id } = req.body;
+    let query_str = `update pause_history set is_cancel= '1' where id = '${pause_id}'`
+
+    query.executeQuery(query_str)
+        .then(pauseData => {
+            common.resOnSuccess(res, true, "Pause request has been approved successfully", pauseData)
+        })
+        .catch(err => common.resOnError(res, false, err))
+}
+
 // ============================================================== Function ==============================================================
 function bookingSlots(date, start_time, end_time) {
     return new Promise((resolve, reject) => {

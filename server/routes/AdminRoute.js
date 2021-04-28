@@ -82,4 +82,7 @@ router.post('/pendingPauseList', CommonMiddleware.authenticateToken, adminContro
 // Accept Pending Pause Request API 
 router.post('/acceptPendingRequest', CommonMiddleware.authenticateToken, adminController.acceptPendingRequest);
 
+// Cancel Pending Pause Request API 
+router.post('/cancelPendingRequest', CommonMiddleware.authenticateToken, adminController.cancelPendingRequest);
+
 module.exports = router;
