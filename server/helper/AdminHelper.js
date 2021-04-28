@@ -433,6 +433,48 @@ exports.unBlockSlots = (req, res) => {
         .catch(err => common.resOnError(res, false, err))
 }
 
+// Upload Picture Helper
+exports.uploadPicture = (req, res) => {
+    let profileImage = "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y";
+
+    if (req.file) {
+        profileImage = req.file.Location
+    }
+
+    common.resOnSuccess(res, true, "Picture has been uploaded", profileImage)
+
+}
+
+// Pending Pause List Helper
+exports.pendingPauseList = (req, res) => {
+    let query_str = `
+        select users.full_name,pause_history.pause_start,pause_history.pause_end,pause_history.reason,pause_history.id as pause_id
+        from pause_history
+        inner join users on users.id = pause_history.user_id
+        where pause_history.is_approved = '0' and pause_history.is_cancel = '0'`
+
+    query.executeQuery(query_str)
+        .then(pauseData => {
+            if (pauseData.length > 0)
+                common.resOnSuccess(res, true, "Pending Pause List has been fetched successfully", pauseData)
+            else
+                common.resOnSuccess(res, false, "No Record Found", pauseData)
+        })
+        .catch(err => common.resOnError(res, false, err))
+}
+
+// Accept Pending Pause Request Helper
+exports.acceptPendingRequest = (req, res) => {
+    const { pause_id } = req.body;
+    let query_str = `update pause_history set is_approved= '1' where id = '${pause_id}'`
+
+    query.executeQuery(query_str)
+        .then(pauseData => {
+            common.resOnSuccess(res, true, "Pause request has been approved successfully", pauseData)
+        })
+        .catch(err => common.resOnError(res, false, err))
+}
+
 // ============================================================== Function ==============================================================
 function bookingSlots(date, start_time, end_time) {
     return new Promise((resolve, reject) => {

@@ -4,6 +4,9 @@ const express = require('express');
 const router = express.Router();
 const util = require("util");
 
+//Image Uploader
+const { uploadProfilePicture } = require("../services")
+
 //Middleware - Registration
 var CommonMiddleware = require('../middleware/CommonMiddle');
 
@@ -69,5 +72,14 @@ router.post('/makeBookingForUser', CommonMiddleware.authenticateToken, adminCont
 
 // Un Block Slots API 
 router.post('/unBlockSlots', CommonMiddleware.authenticateToken, adminController.unBlockSlots);
+
+//Upload Picture API 
+router.post('/uploadPicture', util.promisify(uploadProfilePicture.single("image")), CommonMiddleware.authenticateToken, adminController.uploadPicture);
+
+// Pending Pause List API 
+router.post('/pendingPauseList', CommonMiddleware.authenticateToken, adminController.pendingPauseList);
+
+// Accept Pending Pause Request API 
+router.post('/acceptPendingRequest', CommonMiddleware.authenticateToken, adminController.acceptPendingRequest);
 
 module.exports = router;

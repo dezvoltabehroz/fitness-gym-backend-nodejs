@@ -65,7 +65,7 @@ exports.getMembershipDetail = (req, res) => {
     query.executeQuery(select_query)
         .then(memberData => {
             if (memberData.length > 0) {
-                query.executeQuery(`SELECT COUNT(*) AS pause_count FROM pause_history WHERE membership_id = '${memberData[0].member_id}' AND user_id = '${id}'`)
+                query.executeQuery(`SELECT COUNT(*) AS pause_count FROM pause_history WHERE membership_id = '${memberData[0].member_id}' AND user_id = '${id}' and is_approved = '1'`)
                     .then(pauseData => {
                         memberData[0].pause_count = pauseData[0].pause_count
                         common.resOnSuccess(res, true, "Membership has been fetched successfully", memberData[0])

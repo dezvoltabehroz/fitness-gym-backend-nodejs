@@ -62,3 +62,12 @@ exports.makeBookingForUser = (req, res) => { return adminHelper.makeBookingForUs
 
 // Un Block Slots Controller
 exports.unBlockSlots = (req, res) => { return adminHelper.unBlockSlots(req, res) }
+
+// Upload Picture Controller
+exports.uploadPicture = (req, res) => { return adminHelper.uploadPicture(req, res) }
+
+// Pending Pause List Controller
+exports.pendingPauseList = (req, res) => { return adminHelper.pendingPauseList(req, res) }
+
+// Accept Pending Pause Request Controller
+exports.acceptPendingRequest = (req, res) => { return adminHelper.acceptPendingRequest(req, res) }
