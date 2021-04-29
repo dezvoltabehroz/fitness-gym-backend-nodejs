@@ -57,23 +57,21 @@ exports.loginTrainee = (req, res) => {
     query.executeQuery(login_query)
         .then(userData => {
             if (userData.length > 0) {
-                userData.map((user_data, index) => {
-                    bcrypt.compare(password, user_data.password)
-                        .then((result) => {
-                            if (result) {
-                                var token = jwt.sign({ id: user_data.id }, process.env.SECRET, {
-                                    expiresIn: 86400 // expires in 24 hours
-                                });
-                                user_data.token = token;
-                                common.resOnSuccess(res, true, "Logged in successfully", user_data)
-                            }
-                            else {
-                                if (userData.length == (index + 1))
-                                    common.resOnError(res, false, "Password is not correct")
-                            }
-                        })
-                        .catch(err => common.resOnError(res, false, "Your account has been broken please contact your admin"));
-                })
+                let user_data = userData[0];
+                bcrypt.compare(password, user_data.password)
+                    .then((result) => {
+                        if (result) {
+                            var token = jwt.sign({ id: user_data.id }, process.env.SECRET, {
+                                expiresIn: 86400 // expires in 24 hours
+                            });
+                            user_data.token = token;
+                            common.resOnSuccess(res, true, "Logged in successfully", user_data)
+                        }
+                        else {
+                            common.resOnError(res, false, "Password is not correct")
+                        }
+                    })
+                    .catch(err => common.resOnError(res, false, "Your account has been broken please contact your admin"));
             }
             else
                 common.resOnError(res, false, "Email is not correct")
