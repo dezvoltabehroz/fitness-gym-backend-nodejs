@@ -105,14 +105,24 @@ exports.requestPauseMembership = (req, res) => {
     INSERT INTO pause_history(membership_id,user_id,pause_start,pause_end,reason) 
     VALUES ('${member_id}','${id}','${start_date}','${end_date}','${reason}')`;
 
-    query.executeQuery(select_query)
-        .then(pauseData => {
-            if (pauseData.affectedRows == 1)
-                common.resOnSuccess(res, true, "Pause Request has been added successfully", pauseData)
-            else
-                common.resOnError(res, false, "No Record Found")
+    let query_str_pause = `select * from pause_history where membership_id = '${member_id}' and user_id = '${member_id}' and pause_start<= '${start_date}' and '${end_date}'<=pause_end`
+
+    query.executeQuery(query_str_pause)
+        .then(resPauseData => {
+            if (resPauseData.length > 0) {
+                common.resOnError(res, false, "Unable to process request with same dates")
+            }
+            else {
+                query.executeQuery(select_query)
+                    .then(pauseData => {
+                        if (pauseData.affectedRows == 1)
+                            common.resOnSuccess(res, true, "Pause Request has been added successfully", pauseData)
+                        else
+                            common.resOnError(res, false, "No Record Found")
+                    })
+                    .catch(err => common.resOnError(res, false, err))
+            }
         })
-        .catch(err => common.resOnError(res, false, err))
 }
 
 // API Cancel Request Pause Membership
