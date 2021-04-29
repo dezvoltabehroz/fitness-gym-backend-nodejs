@@ -105,7 +105,7 @@ exports.requestPauseMembership = (req, res) => {
     INSERT INTO pause_history(membership_id,user_id,pause_start,pause_end,reason) 
     VALUES ('${member_id}','${id}','${start_date}','${end_date}','${reason}')`;
 
-    let query_str_pause = `select * from pause_history where membership_id = '${member_id}' and user_id = '${member_id}' and pause_start<= '${start_date}' and '${end_date}'<=pause_end`
+    let query_str_pause = `select * from pause_history where membership_id = '${member_id}' and user_id = '${member_id}' and pause_start<= '${start_date}' and '${start_date}'<=pause_end`
 
     query.executeQuery(query_str_pause)
         .then(resPauseData => {
