@@ -100,7 +100,12 @@ exports.getBookings = (req, res) => {
                                     if (result.length == (index + 1)) {
                                         filteringArrays(newArraySlots)
                                             .then(filterArray => {
-                                                common.resOnSuccess(res, true, "Booking List has been fetched successfully", filterArray)
+                                                let data = {
+                                                    start_time: data_schedule.start_time,
+                                                    end_time: data_schedule.end_time,
+                                                    filterArray: filterArray
+                                                }
+                                                common.resOnSuccess(res, true, "Booking List has been fetched successfully", data)
                                             })
                                     }
                                 }
