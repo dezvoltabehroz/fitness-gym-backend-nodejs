@@ -71,7 +71,8 @@ exports.loginTrainee = (req, res) => {
                                 if (userData.length == (index + 1))
                                     common.resOnError(res, false, "Password is not correct")
                             }
-                        });
+                        })
+                        .catch(err => common.resOnError(res, false, "Your account has been broken please contact your admin"));
                 })
             }
             else
