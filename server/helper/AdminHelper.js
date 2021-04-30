@@ -368,11 +368,20 @@ exports.addSchedules = (req, res) => {
     let query_str = `INSERT INTO schedules (day,start_time,end_time,schedule_date,trainer_id,is_off,break_start_time, break_end_time) 
     VALUES ('${day}','${start_time}','${end_time}','${schedule_date}','1','0','${break_start_time}', '${break_end_time}')`
 
-    query.executeQuery(query_str)
-        .then(scheduleData => {
-            common.resOnSuccess(res, true, "Schedules has been added successfully", scheduleData)
+    let query_date_str = `select * from schedules where schedule_date = '${schedule_date}'`
+
+    query.executeQuery(query_date_str)
+        .then(resSchedules => {
+            if (resSchedules.length > 0)
+                common.resOnError(res, false, 'Schedule has already been set for this date')
+            else {
+                query.executeQuery(query_str)
+                    .then(scheduleData => {
+                        common.resOnSuccess(res, true, "Schedules has been added successfully", scheduleData)
+                    })
+                    .catch(err => common.resOnError(res, false, err))
+            }
         })
-        .catch(err => common.resOnError(res, false, err))
 }
 
 // Edit Schedules Helper
