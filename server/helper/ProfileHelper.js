@@ -82,7 +82,7 @@ exports.getPauseList = (req, res) => {
     const { id, member_id } = req.body;
 
     let select_query = `
-    SELECT pause_history.id, pause_history.is_approved,pause_history.pause_start, pause_history.pause_end, membership.membership_type, DATEDIFF(pause_history.pause_end,pause_history.pause_start) AS days
+    SELECT pause_history.reason, pause_history.id, pause_history.is_approved,pause_history.pause_start, pause_history.pause_end, membership.membership_type, DATEDIFF(pause_history.pause_end,pause_history.pause_start) AS days
     FROM pause_history 
     INNER JOIN membership ON membership.id = pause_history.membership_id
     WHERE membership.id = '${member_id}' AND membership.user_id = '${id}' and pause_history.is_cancel='0'`;
