@@ -210,7 +210,7 @@ exports.updateUser = (req, res) => {
 exports.addUser = (req, res) => {
     const { first_name, last_name, age, dob, phone, emergency_num, email, address, membership_type, gender, answers_list } = req.body;
 
-    let start_date = moment(new date()).add(2, 'M').format('YYYY-MM-DD')
+    let start_date = moment(new Date()).add(2, 'M').format('YYYY-MM-DD')
     let end_date = '';
     if (membership_type == 'Basic')
         end_date = moment(start_date).add(1, 'M').format('YYYY-MM-DD');
