@@ -129,7 +129,7 @@ exports.requestPauseMembership = (req, res) => {
 exports.cancelRequestPauseMembership = (req, res) => {
     const { pause_request_id } = req.body;
 
-    let update_query = `UPDATE pause_history SET is_cancel = '1' WHERE id = '${pause_request_id}'`;
+    let update_query = `delete from pause_history WHERE id = '${pause_request_id}'`;
 
     query.executeQuery(update_query)
         .then(pauseData => {
