@@ -210,6 +210,13 @@ exports.updateUser = (req, res) => {
 exports.addUser = (req, res) => {
     const { first_name, last_name, age, dob, phone, emergency_num, email, address, membership_type, gender, answers_list } = req.body;
 
+    let start_date = moment(new date()).add(2, 'M').format('YYYY-MM-DD')
+    let end_date = '';
+    if (membership_type == 'Basic')
+        end_date = moment(start_date).add(1, 'M').format('YYYY-MM-DD');
+    else
+        end_date = moment(start_date).add(3, 'M').format('YYYY-MM-DD');
+
     query.executeQuery(`select * from users where email = '${email}'`)
         .then(resUserData => {
             if (resUserData.length > 0) {
@@ -225,7 +232,7 @@ exports.addUser = (req, res) => {
                         query.executeQuery(query_insert_users)
                             .then(userData => {
                                 let user_id = userData.insertId
-                                let query_insert_membership = `INSERT INTO membership(membership_type,user_id) values ('${membership_type}','${user_id}')`;
+                                let query_insert_membership = `INSERT INTO membership(membership_type,user_id,membership_start_date,membership_end_date) values ('${membership_type}','${user_id}','${start_date}','${end_date}')`;
                                 query.executeQuery(query_insert_membership)
                                     .then(membershipData => {
                                         if (membershipData.affectedRows == 1) {
