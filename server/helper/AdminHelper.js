@@ -364,24 +364,39 @@ exports.deleteSchedules = (req, res) => {
 
 // Add Schedules Helper
 exports.addSchedules = (req, res) => {
-    const { day, start_time, end_time, schedule_date, break_start_time, break_end_time } = req.body;
-    let query_str = `INSERT INTO schedules (day,start_time,end_time,schedule_date,trainer_id,is_off,break_start_time, break_end_time) 
-    VALUES ('${day}','${start_time}','${end_time}','${schedule_date}','1','0','${break_start_time}', '${break_end_time}')`
+    const { day, start_time, end_time, schedule_date, end_schedule_date, break_start_time, break_end_time } = req.body;
 
-    let query_date_str = `select * from schedules where schedule_date = '${schedule_date}'`
+    var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    var a = moment(schedule_date);
+    var b = moment(end_schedule_date).add(1, 'days');
 
-    query.executeQuery(query_date_str)
-        .then(resSchedules => {
-            if (resSchedules.length > 0)
-                common.resOnError(res, false, 'Schedule has already been set for this date')
-            else {
-                query.executeQuery(query_str)
-                    .then(scheduleData => {
-                        common.resOnSuccess(res, true, "Schedules has been added successfully", scheduleData)
-                    })
-                    .catch(err => common.resOnError(res, false, err))
-            }
-        })
+    for (var m = moment(a); m.isBefore(b); m.add(1, 'days')) {
+        var d = new Date(m.format('YYYY-MM-DD'));
+
+        let sc_day = days[d.getDay()];
+        let sc_date = m.format('YYYY-MM-DD');
+
+        let query_str = `INSERT INTO schedules (day,start_time,end_time,schedule_date,trainer_id,is_off,break_start_time, break_end_time) 
+        VALUES ('${sc_day}','${start_time}','${end_time}','${sc_date}','1','0','${break_start_time}', '${break_end_time}')`
+
+        let query_date_str = `select * from schedules where schedule_date = '${sc_date}'`
+
+        query.executeQuery(query_date_str)
+            .then(resSchedules => {
+                if (resSchedules.length > 0)
+                    common.resOnError(res, false, `Schedule has already been set for this date ${sc_date}`)
+                else {
+                    query.executeQuery(query_str)
+                        .then(scheduleData => {
+                            if (sc_date == end_schedule_date)
+                                common.resOnSuccess(res, true, "Schedules has been added successfully", scheduleData)
+                        })
+                        .catch(err => common.resOnError(res, false, err))
+                }
+            })
+    }
+
+
 }
 
 // Edit Schedules Helper
