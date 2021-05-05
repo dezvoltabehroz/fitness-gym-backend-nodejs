@@ -77,7 +77,7 @@ router.post('/makeBookingForUser', CommonMiddleware.authenticateToken, adminCont
 router.post('/unBlockSlots', CommonMiddleware.authenticateToken, adminController.unBlockSlots);
 
 //Upload Picture API 
-router.post('/uploadPicture', profileUpload.single("image"), CommonMiddleware.authenticateToken, adminController.uploadPicture);
+router.post('/uploadPicture', profileUpload.single("image"), CommonMiddleware.pass, adminController.uploadPicture);
 
 // Pending Pause List API 
 router.post('/pendingPauseList', CommonMiddleware.authenticateToken, adminController.pendingPauseList);
