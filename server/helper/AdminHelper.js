@@ -208,7 +208,7 @@ exports.updateUser = (req, res) => {
 
 // Add User Helper
 exports.addUser = (req, res) => {
-    const { first_name, last_name, age, dob, phone, emergency_num, email, address, membership_type, gender, answers_list } = req.body;
+    const { first_name, last_name, age, dob, phone, emergency_num, email, address, membership_type, gender, profile_picture, answers_list } = req.body;
 
     let start_date = moment(new Date()).add(2, 'M').format('YYYY-MM-DD')
     let end_date = '';
@@ -226,8 +226,8 @@ exports.addUser = (req, res) => {
                 common.sendPasswordInEmail(email, password)
                 bcrypt.hash(password, 10)
                     .then(hashedPassword => {
-                        let query_insert_users = `INSERT INTO users(first_name, last_name, age, dob, phone, emergency_num, email, address, gender, full_name,password) values 
-                    ('${first_name}','${last_name}','${age}','${dob}','${phone}','${emergency_num}','${email}','${address}','${gender}','${first_name} ${last_name}','${hashedPassword}')`
+                        let query_insert_users = `INSERT INTO users(first_name, last_name, age, dob, phone, emergency_num, email, address, gender, full_name,password,profile_picture) values 
+                    ('${first_name}','${last_name}','${age}','${dob}','${phone}','${emergency_num}','${email}','${address}','${gender}','${first_name} ${last_name}','${hashedPassword}','${profile_picture}')`
 
                         query.executeQuery(query_insert_users)
                             .then(userData => {
