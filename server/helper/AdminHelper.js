@@ -364,7 +364,7 @@ exports.deleteSchedules = (req, res) => {
 
 // Add Schedules Helper
 exports.addSchedules = (req, res) => {
-    const { day, start_time, end_time, schedule_date, end_schedule_date, break_start_time, break_end_time } = req.body;
+    const { schedule_date, end_schedule_date } = req.body;
 
     var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     var a = moment(schedule_date);
@@ -375,25 +375,38 @@ exports.addSchedules = (req, res) => {
 
         let sc_day = days[d.getDay()];
         let sc_date = m.format('YYYY-MM-DD');
+        let query_str = ``
 
-        let query_str = `INSERT INTO schedules (day,start_time,end_time,schedule_date,trainer_id,is_off,break_start_time, break_end_time) 
-        VALUES ('${sc_day}','${start_time}','${end_time}','${sc_date}','1','0','${break_start_time}', '${break_end_time}')`
+        if (sc_day == "Monday" || sc_day == "Tuesday" || sc_day == "Wednesday" || sc_day == "Thursday") {
+            query_str = `INSERT INTO schedules (day,start_time,end_time,schedule_date,trainer_id,is_off,break_start_time, break_end_time) 
+            VALUES ('${sc_day}','06:00','20:00','${sc_date}','1','0','14:00', '16:00')`
+        }
+        else if (sc_day == "Friday") {
+            query_str = `INSERT INTO schedules (day,start_time,end_time,schedule_date,trainer_id,is_off,break_start_time, break_end_time) 
+            VALUES ('${sc_day}','06:00','19:00','${sc_date}','1','0','14:00', '16:00')`
+        }
+        else if (sc_day == "Saturday") {
+            query_str = `INSERT INTO schedules (day,start_time,end_time,schedule_date,trainer_id,is_off,break_start_time, break_end_time) 
+            VALUES ('${sc_day}','10:00','12:00','${sc_date}','1','0','', '')`
+        }
 
         let query_date_str = `select * from schedules where schedule_date = '${sc_date}'`
 
-        query.executeQuery(query_date_str)
-            .then(resSchedules => {
-                if (resSchedules.length > 0)
-                    common.resOnError(res, false, `Schedule has already been set for this date ${sc_date}`)
-                else {
-                    query.executeQuery(query_str)
-                        .then(scheduleData => {
-                            if (sc_date == end_schedule_date)
-                                common.resOnSuccess(res, true, "Schedules has been added successfully", scheduleData)
-                        })
-                        .catch(err => common.resOnError(res, false, err))
-                }
-            })
+        if (query_str != ``) {
+            query.executeQuery(query_date_str)
+                .then(resSchedules => {
+                    if (resSchedules.length > 0)
+                        common.resOnError(res, false, `Schedule has already been set for this date ${sc_date}`)
+                    else {
+                        query.executeQuery(query_str)
+                            .then(scheduleData => {
+                                if (sc_date == end_schedule_date)
+                                    common.resOnSuccess(res, true, "Schedules has been added successfully", scheduleData)
+                            })
+                            .catch(err => common.resOnError(res, false, err))
+                    }
+                })
+        }
     }
 
 
