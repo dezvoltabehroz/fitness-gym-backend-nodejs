@@ -505,11 +505,10 @@ exports.uploadPicture = (req, res) => {
     let profileImage = "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y";
 
     if (req.file) {
-        profileImage = req.file.Location
+        profileImage = req.file.original.Location
     }
 
     common.resOnSuccess(res, true, "Picture has been uploaded", profileImage)
-
 }
 
 // Pending Pause List Helper

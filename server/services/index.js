@@ -5,8 +5,8 @@ const multer = require('multer')
 const multerSharp = require('multer-sharp-s3')
 
 AWS.config.update({
-    accessKeyId: "AKIATWY6KK4YBBI5DNP4",
-    secretAccessKey: "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",
+    accessKeyId: "AKIATWY6KK4YDIQNFCJZ",
+    secretAccessKey: "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",
     region: "eu-west-1"
 })
 const s3 = new AWS.S3()
@@ -15,11 +15,13 @@ const s3 = new AWS.S3()
 const profileUpload = multer({
     storage: multerSharp({
         s3,
+        Bucket: "educogym",
         ACL: "public-read",
-        Bucket: "eccles-educogym",
-        metadata: (req, file, callBack) => { callBack(null, { fieldName: file.fieldname }) },
-        key: (req, file, callBack) => { var fullPath = new Date().getTime() + file.originalname; callBack(null, fullPath) },
-        resize: [{ "suffix": "original" }]
+        resize: [
+            { suffix: 'original', width: 1500 }
+        ],
+        multiple: true,
+        Key: (req, file, cb) => { cb(null, file.originalname) }
     })
 })
 
