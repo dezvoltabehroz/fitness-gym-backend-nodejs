@@ -121,7 +121,7 @@ exports.memberProfileDetails = (req, res) => {
     let query_str = `
     SELECT users.id AS user_id, membership.id AS member_id, users.first_name, users.last_name, users.full_name, users.age, users.phone, users.email, users.address, users.dob,users.gender, users.emergency_num,
     membership.membership_status, membership.membership_type, membership.membership_start_date, membership.membership_end_date,
-    IFNULL(pause_history.id,0) AS is_pause
+    IFNULL(pause_history.id,0) AS is_pause, users.profile_picture
     FROM users 
     INNER JOIN membership ON membership.user_id = users.id
     LEFT JOIN pause_history ON users.id = pause_history.user_id AND pause_history.pause_start <= '${date}' AND pause_history.pause_end >='${date}' 
