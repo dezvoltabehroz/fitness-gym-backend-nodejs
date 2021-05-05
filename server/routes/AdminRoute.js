@@ -5,7 +5,7 @@ const router = express.Router();
 const util = require("util");
 
 //Image Uploader
-// const { uploadProfilePicture } = require("../services")
+// const { profileUpload } = require("../services")
 
 //Middleware - Registration
 var CommonMiddleware = require('../middleware/CommonMiddle');
@@ -52,6 +52,9 @@ router.post('/listAllBooking', CommonMiddleware.authenticateToken, adminControll
 // List All Schedules API 
 router.post('/listAllSchedules', CommonMiddleware.authenticateToken, adminController.listAllSchedules);
 
+// Delete All Schedules API 
+router.post('/deleteAllSchedules', CommonMiddleware.authenticateToken, adminController.deleteAllSchedules);
+
 // Delete Schedules API 
 router.post('/deleteSchedules', CommonMiddleware.authenticateToken, adminController.deleteSchedules);
 
@@ -74,7 +77,7 @@ router.post('/makeBookingForUser', CommonMiddleware.authenticateToken, adminCont
 router.post('/unBlockSlots', CommonMiddleware.authenticateToken, adminController.unBlockSlots);
 
 //Upload Picture API 
-// router.post('/uploadPicture', util.promisify(uploadProfilePicture.single("image")), CommonMiddleware.authenticateToken, adminController.uploadPicture);
+// router.post('/uploadPicture', profileUpload.single("image"), CommonMiddleware.authenticateToken, adminController.uploadPicture);
 
 // Pending Pause List API 
 router.post('/pendingPauseList', CommonMiddleware.authenticateToken, adminController.pendingPauseList);

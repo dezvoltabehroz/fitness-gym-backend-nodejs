@@ -350,6 +350,17 @@ exports.listAllSchedules = (req, res) => {
         .catch(err => common.resOnError(res, false, err))
 }
 
+// Delete All Schedules Helper
+exports.deleteAllSchedules = (req, res) => {
+    let query_str = `TRUNCATE TABLE schedules`
+
+    query.executeQuery(query_str)
+        .then(scheduleData => {
+            common.resOnSuccess(res, true, "Deleted successfully", scheduleData)
+        })
+        .catch(err => common.resOnError(res, false, err))
+}
+
 // Delete Schedules Helper
 exports.deleteSchedules = (req, res) => {
     const { id } = req.body;
