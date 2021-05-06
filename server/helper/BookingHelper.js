@@ -19,105 +19,116 @@ exports.getBookings = (req, res) => {
     const { id, date, start_time, end_time } = req.body;
 
     let query_str = `SELECT * FROM schedules WHERE schedule_date = '${date}'`
+    let query_str_membership = `SELECT * FROM membership WHERE membership_start_date <= '${date}' AND  '${date}' <=  membership_end_date AND user_id = '${id}'`
 
-    if (start_time && end_time) {
-        query.executeQuery(query_str)
-            .then(scheduleData => {
-                if (scheduleData.length > 0) {
-                    let data_schedule = scheduleData[0];
-                    bookingSlots(id, date, start_time, end_time)
-                        .then(result => {
-                            let newArraySlots = [];
-
-                            result.forEach((slotData, index) => {
-                                if (data_schedule.break_start_time <= slotData.booking_start_time && data_schedule.break_end_time >= slotData.booking_end_time) {
-                                    slotData.isBreak = true;
-                                    newArraySlots.push(slotData)
-                                    if (result.length == (index + 1)) {
-                                        filteringArrays(newArraySlots)
-                                            .then(filterArray => {
-                                                let data = {
-                                                    start_time: data_schedule.start_time,
-                                                    end_time: data_schedule.end_time,
-                                                    filterArray: filterArray
-                                                }
-                                                common.resOnSuccess(res, true, "Booking List has been fetched successfully", data)
-                                            })
-                                    }
-                                }
-                                else {
-                                    slotData.isBreak = false;
-                                    newArraySlots.push(slotData)
-                                    if (result.length == (index + 1)) {
-                                        filteringArrays(newArraySlots)
-                                            .then(filterArray => {
-                                                let data = {
-                                                    start_time: data_schedule.start_time,
-                                                    end_time: data_schedule.end_time,
-                                                    filterArray: filterArray
-                                                }
-                                                common.resOnSuccess(res, true, "Booking List has been fetched successfully", data)
-                                            })
-                                    }
-                                }
-                            })
-                        })
-                        .catch(err => common.resOnError(res, false, err))
-                }
-                else
-                    common.resOnError(res, false, "No Record Found")
-            })
-            .catch(err => common.resOnError(res, false, err))
-    }
-    else {
-        query.executeQuery(query_str)
-            .then(scheduleData => {
-                if (scheduleData.length > 0) {
-                    let data_schedule = scheduleData[0];
-                    bookingSlots(id, date, data_schedule.start_time, data_schedule.end_time)
-                        .then(result => {
-                            let newArraySlots = [];
-
-                            result.forEach((slotData, index) => {
-                                if (data_schedule.break_start_time <= slotData.booking_start_time && data_schedule.break_end_time >= slotData.booking_end_time) {
-                                    slotData.isBreak = true;
-                                    newArraySlots.push(slotData)
-                                    if (result.length == (index + 1)) {
-                                        filteringArrays(newArraySlots)
-                                            .then(filterArray => {
-                                                let data = {
-                                                    start_time: data_schedule.start_time,
-                                                    end_time: data_schedule.end_time,
-                                                    filterArray: filterArray
-                                                }
-                                                common.resOnSuccess(res, true, "Booking List has been fetched successfully", data)
-                                            })
-                                    }
-                                }
-                                else {
-                                    slotData.isBreak = false;
-                                    newArraySlots.push(slotData)
-                                    if (result.length == (index + 1)) {
-                                        filteringArrays(newArraySlots)
-                                            .then(filterArray => {
-                                                let data = {
-                                                    start_time: data_schedule.start_time,
-                                                    end_time: data_schedule.end_time,
-                                                    filterArray: filterArray
-                                                }
-                                                common.resOnSuccess(res, true, "Booking List has been fetched successfully", data)
-                                            })
-                                    }
-                                }
-                            })
-                        })
-                        .catch(err => common.resOnError(res, false, err))
-                }
-                else
-                    common.resOnError(res, false, "No Record Found")
-            })
-            .catch(err => common.resOnError(res, false, err))
-    }
+    query.executeQuery(query_str_membership)
+    .then(resMembership =>{
+        if(resMembership.length > 0)
+        {
+            if (start_time && end_time) {
+                query.executeQuery(query_str)
+                    .then(scheduleData => {
+                        if (scheduleData.length > 0) {
+                            let data_schedule = scheduleData[0];
+                            bookingSlots(id, date, start_time, end_time)
+                                .then(result => {
+                                    let newArraySlots = [];
+        
+                                    result.forEach((slotData, index) => {
+                                        if (data_schedule.break_start_time <= slotData.booking_start_time && data_schedule.break_end_time >= slotData.booking_end_time) {
+                                            slotData.isBreak = true;
+                                            newArraySlots.push(slotData)
+                                            if (result.length == (index + 1)) {
+                                                filteringArrays(newArraySlots)
+                                                    .then(filterArray => {
+                                                        let data = {
+                                                            start_time: data_schedule.start_time,
+                                                            end_time: data_schedule.end_time,
+                                                            filterArray: filterArray
+                                                        }
+                                                        common.resOnSuccess(res, true, "Booking List has been fetched successfully", data)
+                                                    })
+                                            }
+                                        }
+                                        else {
+                                            slotData.isBreak = false;
+                                            newArraySlots.push(slotData)
+                                            if (result.length == (index + 1)) {
+                                                filteringArrays(newArraySlots)
+                                                    .then(filterArray => {
+                                                        let data = {
+                                                            start_time: data_schedule.start_time,
+                                                            end_time: data_schedule.end_time,
+                                                            filterArray: filterArray
+                                                        }
+                                                        common.resOnSuccess(res, true, "Booking List has been fetched successfully", data)
+                                                    })
+                                            }
+                                        }
+                                    })
+                                })
+                                .catch(err => common.resOnError(res, false, err))
+                        }
+                        else
+                            common.resOnError(res, false, "No Record Found")
+                    })
+                    .catch(err => common.resOnError(res, false, err))
+            }
+            else {
+                query.executeQuery(query_str)
+                    .then(scheduleData => {
+                        if (scheduleData.length > 0) {
+                            let data_schedule = scheduleData[0];
+                            bookingSlots(id, date, data_schedule.start_time, data_schedule.end_time)
+                                .then(result => {
+                                    let newArraySlots = [];
+        
+                                    result.forEach((slotData, index) => {
+                                        if (data_schedule.break_start_time <= slotData.booking_start_time && data_schedule.break_end_time >= slotData.booking_end_time) {
+                                            slotData.isBreak = true;
+                                            newArraySlots.push(slotData)
+                                            if (result.length == (index + 1)) {
+                                                filteringArrays(newArraySlots)
+                                                    .then(filterArray => {
+                                                        let data = {
+                                                            start_time: data_schedule.start_time,
+                                                            end_time: data_schedule.end_time,
+                                                            filterArray: filterArray
+                                                        }
+                                                        common.resOnSuccess(res, true, "Booking List has been fetched successfully", data)
+                                                    })
+                                            }
+                                        }
+                                        else {
+                                            slotData.isBreak = false;
+                                            newArraySlots.push(slotData)
+                                            if (result.length == (index + 1)) {
+                                                filteringArrays(newArraySlots)
+                                                    .then(filterArray => {
+                                                        let data = {
+                                                            start_time: data_schedule.start_time,
+                                                            end_time: data_schedule.end_time,
+                                                            filterArray: filterArray
+                                                        }
+                                                        common.resOnSuccess(res, true, "Booking List has been fetched successfully", data)
+                                                    })
+                                            }
+                                        }
+                                    })
+                                })
+                                .catch(err => common.resOnError(res, false, err))
+                        }
+                        else
+                            common.resOnError(res, false, "No Record Found")
+                    })
+                    .catch(err => common.resOnError(res, false, err))
+            }
+        }
+        else
+        {
+            common.resOnSuccess(res, false, "You don't have active membership", [])
+        }
+    })
 }
 
 // API Book Slot
