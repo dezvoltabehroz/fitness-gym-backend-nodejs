@@ -208,14 +208,40 @@ exports.updateUser = (req, res) => {
 
 // Add User Helper
 exports.addUser = (req, res) => {
-    const { first_name, last_name, age, dob, phone, emergency_num, email, address, membership_type, gender, profile_picture, answers_list } = req.body;
+    const { first_name, last_name, age, dob, phone, emergency_num, email, address, membership_type, membership_start_date, gender, profile_picture, answers_list } = req.body;
 
-    let start_date = moment(new Date()).add(2, 'M').format('YYYY-MM-DD')
+    let start_date = moment(membership_start_date).format('YYYY-MM-DD')
     let end_date = '';
-    if (membership_type == 'Basic')
-        end_date = moment(start_date).add(1, 'M').format('YYYY-MM-DD');
-    else
-        end_date = moment(start_date).add(3, 'M').format('YYYY-MM-DD');
+    switch (membership_type) {
+        case "monthly":
+            end_date = moment(start_date).add(30, 'd').format('YYYY-MM-DD');
+            break;
+
+        case "6weeks":
+            end_date = moment(start_date).add(42, 'd').format('YYYY-MM-DD');
+            break;
+
+        case "3months":
+            end_date = moment(start_date).add(90, 'd').format('YYYY-MM-DD');
+            break;
+
+        case "8weeks":
+            end_date = moment(start_date).add(56, 'd').format('YYYY-MM-DD');
+            break;
+
+        case "1year":
+            end_date = moment(start_date).add(365, 'd').format('YYYY-MM-DD');
+            break;
+
+        case "12days":
+            end_date = moment(start_date).add(12, 'd').format('YYYY-MM-DD');
+            break;
+
+        default:
+            end_date = moment(start_date).add(3, 'd').format('YYYY-MM-DD');
+            break;
+    }
+
 
     query.executeQuery(`select * from users where email = '${email}'`)
         .then(resUserData => {
