@@ -213,27 +213,27 @@ exports.addUser = (req, res) => {
     let start_date = moment(membership_start_date).format('YYYY-MM-DD')
     let end_date = '';
     switch (membership_type) {
-        case "monthly":
+        case "Monthly":
             end_date = moment(start_date).add(30, 'd').format('YYYY-MM-DD');
             break;
 
-        case "6weeks":
+        case "6 Weeks":
             end_date = moment(start_date).add(42, 'd').format('YYYY-MM-DD');
             break;
 
-        case "3months":
+        case "3 Months":
             end_date = moment(start_date).add(90, 'd').format('YYYY-MM-DD');
             break;
 
-        case "8weeks":
+        case "8 Weeks":
             end_date = moment(start_date).add(56, 'd').format('YYYY-MM-DD');
             break;
 
-        case "1year":
+        case "1 Year":
             end_date = moment(start_date).add(365, 'd').format('YYYY-MM-DD');
             break;
 
-        case "12days":
+        case "12 Days":
             end_date = moment(start_date).add(12, 'd').format('YYYY-MM-DD');
             break;
 
