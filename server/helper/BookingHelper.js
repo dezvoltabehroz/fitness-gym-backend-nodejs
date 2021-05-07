@@ -255,10 +255,10 @@ function filteringArrays(result) {
             if (slotData.is_blocked == 1)
                 blocked_slots.push(slotData)
 
-            if (slotData.booked_slots == 4)
+            if (slotData.booked_slots <= 5)
                 full_slots.push(slotData)
 
-            if (slotData.booked_slots < 4)
+            if (slotData.booked_slots < 5)
                 available_slots.push(slotData)
 
             if (result.length == (index + 1)) {
