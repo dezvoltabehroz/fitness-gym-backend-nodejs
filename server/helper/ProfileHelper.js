@@ -106,21 +106,29 @@ exports.requestPauseMembership = (req, res) => {
     VALUES ('${member_id}','${id}','${start_date}','${end_date}','${reason}')`;
 
     let query_str_pause = `select * from pause_history where membership_id = '${member_id}' and user_id = '${id}' and pause_start<= '${start_date}' and '${start_date}'<=pause_end`
+    let query_membership_check = `select * from membership where id = '${member_id}' and user_id = '${id}' and (membership_start_date <= '${start_date}' and '${start_date}' <= membership_end_date) and (membership_start_date <= '${end_date}' and '${end_date}' <= membership_end_date)`
 
-    query.executeQuery(query_str_pause)
-        .then(resPauseData => {
-            if (resPauseData.length > 0) {
-                common.resOnError(res, false, "Unable to process request with same dates")
-            }
-            else {
-                query.executeQuery(select_query)
-                    .then(pauseData => {
-                        if (pauseData.affectedRows == 1)
-                            common.resOnSuccess(res, true, "Pause Request has been added successfully", pauseData)
-                        else
-                            common.resOnError(res, false, "No Record Found")
+    query.executeQuery(query_membership_check)
+        .then(resMembership => {
+            if (resMembership.length > 0) {
+                query.executeQuery(query_str_pause)
+                    .then(resPauseData => {
+                        if (resPauseData.length > 0) {
+                            common.resOnError(res, false, "Unable to process request with same dates")
+                        }
+                        else {
+                            query.executeQuery(select_query)
+                                .then(pauseData => {
+                                    if (pauseData.affectedRows == 1)
+                                        common.resOnSuccess(res, true, "Pause Request has been added successfully", pauseData)
+                                    else
+                                        common.resOnError(res, false, "No Record Found")
+                                })
+                                .catch(err => common.resOnError(res, false, err))
+                        }
                     })
-                    .catch(err => common.resOnError(res, false, err))
+            } else {
+                common.resOnError(res, false, "Please select dates during your membership period")
             }
         })
 }
