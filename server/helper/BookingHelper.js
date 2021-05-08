@@ -267,7 +267,7 @@ function filteringArrays(result) {
             if (slotData.is_blocked == 1)
                 blocked_slots.push(slotData)
 
-            if (slotData.booked_slots <= 5)
+            if (slotData.booked_slots >= 1)
                 full_slots.push(slotData)
 
             if (slotData.booked_slots < 5)
