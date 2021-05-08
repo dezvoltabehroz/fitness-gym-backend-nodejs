@@ -124,7 +124,6 @@ exports.getBookings = (req, res) => {
                 }
             }
             else {
-
                 if (start_time && end_time) {
                     query.executeQuery(query_str)
                         .then(scheduleData => {
@@ -138,6 +137,8 @@ exports.getBookings = (req, res) => {
                                 }
                                 common.resOnSuccess(res, false, "You don't have active membership", data)
                             }
+                            else
+                                common.resOnError(res, false, "No Record Found")
                         })
                 }
             }
