@@ -124,23 +124,21 @@ exports.getBookings = (req, res) => {
                 }
             }
             else {
-                if (start_time && end_time) {
-                    query.executeQuery(query_str)
-                        .then(scheduleData => {
-                            if (scheduleData.length > 0) {
-                                let data_schedule = scheduleData[0];
+                query.executeQuery(query_str)
+                    .then(scheduleData => {
+                        if (scheduleData.length > 0) {
+                            let data_schedule = scheduleData[0];
 
-                                let data = {
-                                    start_time: data_schedule.start_time,
-                                    end_time: data_schedule.end_time,
-                                    filterArray: []
-                                }
-                                common.resOnSuccess(res, false, "You don't have active membership", data)
+                            let data = {
+                                start_time: data_schedule.start_time,
+                                end_time: data_schedule.end_time,
+                                filterArray: []
                             }
-                            else
-                                common.resOnError(res, false, "No Record Found")
-                        })
-                }
+                            common.resOnSuccess(res, false, "You don't have active membership", data)
+                        }
+                        else
+                            common.resOnError(res, false, "No Record Found")
+                    })
             }
         })
 }
