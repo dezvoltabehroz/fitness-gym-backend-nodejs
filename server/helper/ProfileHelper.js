@@ -164,13 +164,19 @@ exports.listAllBookings = (req, res) => {
         .then(bookingData => {
             if (bookingData.length > 0) {
                 let list_booking = [];
-                bookingData.map( (dataBooking, index) => {
+                let interation = 1;
+                bookingData.map((dataBooking) => {
                     let booking_slots_query = `SELECT COUNT(*) AS booked_slots FROM booking WHERE booking_start_time = '${dataBooking.booking_start_time}' AND booking_end_time = '${dataBooking.booking_end_time}' AND booking_date = '${moment(dataBooking.booking_date).format('yyyy-MM-DD')}' and is_cancel = 0`
                     query.executeQuery(booking_slots_query)
                         .then(slotsData => {
                             dataBooking.booked_slots = slotsData[0].booked_slots
                             list_booking.push(dataBooking)
-                            if (bookingData.length == (index + 1)) {
+                            interation++;
+                            if (bookingData.length == interation) {
+                                list_booking = list_booking.sort(function(a, b) {
+                                    var dateA = new Date(a.booking_date), dateB = new Date(b.booking_date);
+                                    return dateB - dateA;
+                                });
                                 common.resOnSuccess(res, true, "Request has been Cancel successfully", list_booking)
                             }
                         })
