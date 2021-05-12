@@ -165,8 +165,11 @@ exports.listAllBookings = (req, res) => {
             if (bookingData.length > 0) {
                 let list_booking = [];
                 let interation = 1;
+                // console.log("========================")
                 bookingData.map((dataBooking) => {
-                    let booking_slots_query = `SELECT COUNT(*) AS booked_slots FROM booking WHERE booking_start_time = '${dataBooking.booking_start_time}' AND booking_end_time = '${dataBooking.booking_end_time}' AND booking_date = '${moment(dataBooking.booking_date).format('yyyy-MM-DD')}' and is_cancel = 0`
+                    let booking_date = moment(dataBooking.booking_date).subtract(1,"d").format('yyyy-MM-DD');
+                    // console.log("Original Date : ",dataBooking.booking_date, " Formated Date : ", booking_date)
+                    let booking_slots_query = `SELECT COUNT(*) AS booked_slots FROM booking WHERE booking_start_time = '${dataBooking.booking_start_time}' AND booking_end_time = '${dataBooking.booking_end_time}' AND booking_date = '${booking_date}' and is_cancel = 0`
                     query.executeQuery(booking_slots_query)
                         .then(slotsData => {
                             dataBooking.booked_slots = slotsData[0].booked_slots
