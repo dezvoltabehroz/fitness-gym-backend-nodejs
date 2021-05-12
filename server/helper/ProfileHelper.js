@@ -158,16 +158,15 @@ exports.cancelRequestPauseMembership = (req, res) => {
 exports.listAllBookings = (req, res) => {
     const { id } = req.body;
 
-    let select_query = `SELECT * FROM booking WHERE customer_id = '${id}' and is_cancel = 0`;
+    let select_query = `SELECT * FROM booking WHERE customer_id = '${id}' and is_cancel = 0 order by booking_date desc`;
 
     query.executeQuery(select_query)
-        .then(bookingData => {
+        .then(async bookingData => {
             if (bookingData.length > 0) {
                 let list_booking = [];
-                bookingData.forEach((dataBooking, index) => {
-                    let booking_slots_query =
-                        `SELECT COUNT(*) AS booked_slots FROM booking WHERE booking_start_time = '${dataBooking.booking_start_time}' AND booking_end_time = '${dataBooking.booking_end_time}' AND booking_date = '${moment(dataBooking.booking_date).format('yyyy-MM-DD')}' and is_cancel = 0`
-                    query.executeQuery(booking_slots_query)
+                bookingData.forEach(async (dataBooking, index) => {
+                    let booking_slots_query = `SELECT COUNT(*) AS booked_slots FROM booking WHERE booking_start_time = '${dataBooking.booking_start_time}' AND booking_end_time = '${dataBooking.booking_end_time}' AND booking_date = '${moment(dataBooking.booking_date).format('yyyy-MM-DD')}' and is_cancel = 0`
+                    await query.executeQuery(booking_slots_query)
                         .then(slotsData => {
                             dataBooking.booked_slots = slotsData[0].booked_slots
                             list_booking.push(dataBooking)
