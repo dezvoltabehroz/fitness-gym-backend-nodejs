@@ -164,8 +164,8 @@ exports.listAllBookings = (req, res) => {
         .then(bookingData => {
             if (bookingData.length > 0) {
                 let list_booking = [];
-                let interation = 1;
-                // console.log("========================")
+                let interation = 0;
+                // console.log("======================== : ",bookingData.length ," : ========================")
                 bookingData.map((dataBooking) => {
                     let booking_date = moment(dataBooking.booking_date).subtract(1,"d").format('yyyy-MM-DD');
                     // console.log("Original Date : ",dataBooking.booking_date, " Formated Date : ", booking_date)
@@ -175,6 +175,7 @@ exports.listAllBookings = (req, res) => {
                             dataBooking.booked_slots = slotsData[0].booked_slots
                             list_booking.push(dataBooking)
                             interation++;
+                            // console.log("Length : ",bookingData.length ," interation: ", interation)
                             if (bookingData.length == interation) {
                                 list_booking = list_booking.sort(function(a, b) {
                                     var dateA = new Date(a.booking_date), dateB = new Date(b.booking_date);
