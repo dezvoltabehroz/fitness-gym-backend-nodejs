@@ -164,7 +164,7 @@ exports.listAllBookings = (req, res) => {
         .then(bookingData => {
             if (bookingData.length > 0) {
                 let list_booking = [];
-                bookingData.forEach(async (dataBooking, index) => {
+                bookingData.map(async (dataBooking, index) => {
                     let booking_slots_query = `SELECT COUNT(*) AS booked_slots FROM booking WHERE booking_start_time = '${dataBooking.booking_start_time}' AND booking_end_time = '${dataBooking.booking_end_time}' AND booking_date = '${moment(dataBooking.booking_date).format('yyyy-MM-DD')}' and is_cancel = 0`
                     await query.executeQuery(booking_slots_query)
                         .then(slotsData => {
