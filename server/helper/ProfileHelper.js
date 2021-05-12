@@ -57,7 +57,7 @@ exports.getMembershipDetail = (req, res) => {
     const { id } = req.body;
 
     let select_query = `
-    SELECT users.profile_picture,users.full_name,users.email,users.phone,membership.membership_type,membership.id AS member_id,membership.membership_start_date,membership.membership_end_date
+    SELECT users.profile_picture,users.full_name,users.email,users.phone,membership.membership_type,membership.id AS member_id,membership.membership_start_date,membership.membership_end_date,DATEDIFF(membership.membership_end_date,membership.membership_start_date) AS days
     FROM users
     INNER JOIN membership ON membership.user_id = users.id
     WHERE users.id = '${id}'`;
