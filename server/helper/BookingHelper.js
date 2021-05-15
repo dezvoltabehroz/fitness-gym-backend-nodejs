@@ -201,7 +201,7 @@ function bookingSlotsArray(id, date, start_time, end_time) {
             FROM booking WHERE 
             booking_start_time = '${bookingSlots.booking_start_time}' AND 
             booking_end_time = '${bookingSlots.booking_end_time}' 
-            AND booking_date = '${moment(date).format('yyyy-MM-DD')}' and is_cancel = 0`
+            AND booking_date = '${moment(date).format('yyyy-MM-DD')}' and is_cancel = 0 group by is_blocked,is_unavailable`
 
         query.executeQuery(booking_slots_query)
             .then(async slotsData => {
@@ -230,7 +230,7 @@ function bookingSlotsArray(id, date, start_time, end_time) {
                         FROM booking WHERE 
                         booking_start_time = '${bookingSlots.booking_start_time}' AND 
                         booking_end_time = '${bookingSlots.booking_end_time}' 
-                        AND booking_date = '${moment(date).format('yyyy-MM-DD')}' and is_cancel = 0`
+                        AND booking_date = '${moment(date).format('yyyy-MM-DD')}' and is_cancel = 0 group by is_blocked,is_unavailable`
 
                     await query.executeQuery(booking_slots_query)
                         .then(slotsData2 => {
