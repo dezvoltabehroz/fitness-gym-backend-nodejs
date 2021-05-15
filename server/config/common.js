@@ -14,7 +14,7 @@ module.exports = {
         res.status(200).json({ success: status, message: msg, data: data });
     },
     resOnError(res, status, err) {
-        res.status(200).json({ success: status, message: err });
+        res.status(200).json({ success: status, message: JSON.stringify(err) });
     },
     generate_random_code() {
         return Math.floor(100000 + Math.random() * 900000)
