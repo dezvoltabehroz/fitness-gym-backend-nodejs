@@ -611,7 +611,7 @@ function bookingSlotsArray(date, start_time, end_time) {
             FROM booking WHERE 
             booking_start_time = '${bookingSlots.booking_start_time}' AND 
             booking_end_time = '${bookingSlots.booking_end_time}' 
-            AND booking_date = '${moment(date).format('yyyy-MM-DD')}' and is_cancel = 0`
+            AND booking_date = '${moment(date).format('yyyy-MM-DD')}' and is_cancel = 0 group by is_blocked`
 
         query.executeQuery(booking_slots_query)
             .then(async slotsData => {
@@ -648,13 +648,20 @@ function bookingSlotsArray(date, start_time, end_time) {
                         FROM booking WHERE 
                         booking_start_time = '${bookingSlots.booking_start_time}' AND 
                         booking_end_time = '${bookingSlots.booking_end_time}' 
-                        AND booking_date = '${moment(date).format('yyyy-MM-DD')}' and is_cancel = 0`
+                        AND booking_date = '${moment(date).format('yyyy-MM-DD')}' and is_cancel = 0 group by is_blocked`
 
                     await query.executeQuery(booking_slots_query)
                         .then(slotsData2 => {
-                            bookingSlots.booked_slots = slotsData2[0].booked_slots
-                            bookingSlots.is_booked = slotsData2[0].is_booked
-                            bookingSlots.is_blocked = slotsData2[0].is_blocked
+                            if (slotsData2.length > 0) {
+                                bookingSlots.booked_slots = slotsData2[0].booked_slots
+                                bookingSlots.is_booked = slotsData2[0].is_booked
+                                bookingSlots.is_blocked = slotsData2[0].is_blocked
+                            }
+                            else {
+                                bookingSlots.booked_slots = 0
+                                bookingSlots.is_booked = 0
+                                bookingSlots.is_blocked = 0
+                            }
 
                             let query_booking_user = `
                                         SELECT users.id AS user_id,CONCAT(users.first_name,' ',users.last_name) AS full_name
