@@ -615,9 +615,16 @@ function bookingSlotsArray(date, start_time, end_time) {
 
         query.executeQuery(booking_slots_query)
             .then(async slotsData => {
-                bookingSlots.booked_slots = slotsData[0].booked_slots
-                bookingSlots.is_booked = slotsData[0].is_booked
-                bookingSlots.is_blocked = slotsData[0].is_blocked
+                if (slotsData.length > 0) {
+                    bookingSlots.booked_slots = slotsData[0].booked_slots
+                    bookingSlots.is_booked = slotsData[0].is_booked
+                    bookingSlots.is_blocked = slotsData[0].is_blocked
+                } else {
+                    bookingSlots.booked_slots = 0
+                    bookingSlots.is_booked = 0
+                    bookingSlots.is_blocked = 0
+                }
+
                 let query_booking_user = `
                 SELECT users.id AS user_id,CONCAT(users.first_name,' ',users.last_name) AS full_name
                 FROM users
@@ -656,8 +663,7 @@ function bookingSlotsArray(date, start_time, end_time) {
                                 bookingSlots.booked_slots = slotsData2[0].booked_slots
                                 bookingSlots.is_booked = slotsData2[0].is_booked
                                 bookingSlots.is_blocked = slotsData2[0].is_blocked
-                            }
-                            else {
+                            } else {
                                 bookingSlots.booked_slots = 0
                                 bookingSlots.is_booked = 0
                                 bookingSlots.is_blocked = 0
