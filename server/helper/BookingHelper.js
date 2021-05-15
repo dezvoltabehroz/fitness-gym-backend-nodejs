@@ -205,10 +205,17 @@ function bookingSlotsArray(id, date, start_time, end_time) {
 
         query.executeQuery(booking_slots_query)
             .then(async slotsData => {
-                bookingSlots.booked_slots = slotsData[0].booked_slots
-                bookingSlots.is_booked = slotsData[0].is_booked
-                bookingSlots.is_blocked = slotsData[0].is_blocked
-                bookingSlots.is_unavailable = slotsData[0].is_unavailable
+                if (slotsData.length > 0) {
+                    bookingSlots.booked_slots = slotsData[0].booked_slots
+                    bookingSlots.is_booked = slotsData[0].is_booked
+                    bookingSlots.is_blocked = slotsData[0].is_blocked
+                    bookingSlots.is_unavailable = slotsData[0].is_unavailable
+                }else{
+                    bookingSlots.booked_slots = 0
+                    bookingSlots.is_booked = 0
+                    bookingSlots.is_blocked = 0
+                    bookingSlots.is_unavailable = 0
+                }
                 let timeSlots = [bookingSlots];
 
                 while (start_time != end_time) {
