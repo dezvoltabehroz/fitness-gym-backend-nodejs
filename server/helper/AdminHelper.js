@@ -565,7 +565,7 @@ exports.acceptPendingRequest = (req, res) => {
         .then(pauseData => {
             query.executeQuery(query_days)
                 .then(resPauseData => {
-                    let days = resPauseData[0].days;
+                    let days = resPauseData[0].days+1;
                     let user_id = resPauseData[0].user_id;
                     let update_membership_query = `update membership set membership_end_date = DATE_ADD(membership_end_date, INTERVAL ${days} DAY) where user_id = '${user_id}'`
                     query.executeQuery(update_membership_query)
