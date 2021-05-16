@@ -498,7 +498,7 @@ exports.makeBookingForUser = (req, res) => {
     let query_str = `insert into booking(booking_date,booking_start_time,booking_end_time,customer_id) 
     values ('${booking_date}','${booking_start_time}','${booking_end_time}','${customer_id}')`
 
-    let query_slot_available = `select * from booking where booking_date = '${booking_date}' and booking_start_time= '${booking_start_time}' and booking_end_time= '${booking_end_time}' and customer_id = '${customer_id}'`
+    let query_slot_available = `select * from booking where booking_date = '${booking_date}' and customer_id = '${customer_id}'`
 
     query.executeQuery(query_slot_available)
         .then(resBooking => {
