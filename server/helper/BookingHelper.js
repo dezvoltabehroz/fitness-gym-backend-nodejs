@@ -246,7 +246,7 @@ function bookingSlotsArray(id, date, start_time, end_time) {
                                 bookingSlots.is_booked = slotsData2[0].is_booked
                                 bookingSlots.is_blocked = slotsData2[0].is_blocked
                                 bookingSlots.is_unavailable = slotsData2[0].is_unavailable
-                            }else{
+                            } else {
                                 bookingSlots.booked_slots = 0
                                 bookingSlots.is_booked = 0
                                 bookingSlots.is_blocked = 0

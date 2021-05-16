@@ -559,10 +559,19 @@ exports.pendingPauseList = (req, res) => {
 exports.acceptPendingRequest = (req, res) => {
     const { pause_id } = req.body;
     let query_str = `update pause_history set is_approved= '1' where id = '${pause_id}'`
+    let query_days = `select DATEDIFF(pause_end, pause_start) AS days, user_id from pause_history where user_id = id = '${pause_id}'`
 
     query.executeQuery(query_str)
         .then(pauseData => {
-            common.resOnSuccess(res, true, "Pause request has been approved successfully", pauseData)
+            query.executeQuery(query_days)
+            .then(resPauseData =>{
+                let days = resPauseData[0].days;
+                let user_id = resPauseData[0].user_id;
+                let update_membership_query = `update membership set membership_end_date = DATE_ADD(membership_end_date, INTERVAL ${days} DAY) where user_id = '${user_id}'`
+                query.executeQuery(update_membership_query)
+                common.resOnSuccess(res, true, "Pause request has been approved successfully", pauseData)
+            })
+            .catch(err => common.resOnError(res, false, err))
         })
         .catch(err => common.resOnError(res, false, err))
 }
