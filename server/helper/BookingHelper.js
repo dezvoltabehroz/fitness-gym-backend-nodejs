@@ -160,7 +160,7 @@ exports.bookSlot = (req, res) => {
                     })
                     .catch(err => common.resOnError(res, false, err))
             }else{
-                common.resOnError(res, false, "Slots are already full for selected time slot")
+                common.resOnError(res, true, "Slots are already full for selected time slot")
             }
         })
         .catch(err => common.resOnError(res, false, err))
