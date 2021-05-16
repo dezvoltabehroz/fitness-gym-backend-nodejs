@@ -148,10 +148,20 @@ exports.bookSlot = (req, res) => {
     let query_insert = `INSERT INTO booking (booking_date,booking_start_time,booking_end_time,customer_id) 
     VALUES('${booking_date}','${booking_start_time}','${booking_end_time}','${id}')`
 
-    query.executeQuery(query_insert)
-        .then(resData => {
-            if (resData.affectedRows == 1)
-                common.resOnSuccess(res, true, "Slot has been booked successfully", resData)
+    let query_slots_data = `select count(*) as total_count from booking where booking_date= '${booking_date}' and booking_start_time='${booking_start_time}' and booking_end_time='${booking_end_time}'`
+
+    query.executeQuery(query_slots_data)
+        .then(resBookingData => {
+            if (resBookingData[0].total_count < 5) {
+                query.executeQuery(query_insert)
+                    .then(resData => {
+                        if (resData.affectedRows == 1)
+                            common.resOnSuccess(res, true, "Slot has been booked successfully", resData)
+                    })
+                    .catch(err => common.resOnError(res, false, err))
+            }else{
+                common.resOnError(res, false, "Slots are already full for selected time slot")
+            }
         })
         .catch(err => common.resOnError(res, false, err))
 }
