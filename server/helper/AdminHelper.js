@@ -102,7 +102,7 @@ exports.listAllMembers = (req, res) => {
     IFNULL(pause_history.id,0) AS is_pause
     FROM users 
     INNER JOIN membership ON membership.user_id = users.id
-    LEFT JOIN pause_history ON users.id = pause_history.user_id AND pause_history.pause_start <= '${date}' AND pause_history.pause_end >='${date}' 
+    LEFT JOIN pause_history ON users.id = pause_history.user_id
     WHERE users.user_type = 'user'`
 
     query.executeQuery(query_str)
