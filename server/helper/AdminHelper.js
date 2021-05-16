@@ -99,10 +99,9 @@ exports.listAllMembers = (req, res) => {
 
     let query_str = `
     SELECT users.id AS user_id, membership.id AS member_id, users.first_name, users.last_name, users.full_name, membership.membership_type, membership.membership_status, membership.membership_start_date, membership.membership_end_date,
-    IFNULL(pause_history.id,0) AS is_pause
+    (select count(*) from pause_history where user_id = users.id) AS is_pause
     FROM users 
     INNER JOIN membership ON membership.user_id = users.id
-    LEFT JOIN pause_history ON users.id = pause_history.user_id
     WHERE users.user_type = 'user'`
 
     query.executeQuery(query_str)
