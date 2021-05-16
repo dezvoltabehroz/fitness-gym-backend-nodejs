@@ -166,7 +166,7 @@ exports.listAllBookings = (req, res) => {
                 let list_booking = [];
                 let interation = 0;
                 bookingData.map(async (dataBooking) => {
-                    let booking_date = moment(dataBooking.booking_date).subtract(1,"d").format('yyyy-MM-DD');
+                    let booking_date = moment(dataBooking.booking_date).format('yyyy-MM-DD');
                     let booking_slots_query = `SELECT COUNT(*) AS booked_slots FROM booking WHERE booking_start_time = '${dataBooking.booking_start_time}' AND booking_end_time = '${dataBooking.booking_end_time}' AND booking_date = '${booking_date}' and is_cancel = 0`
                     await query.executeQuery(booking_slots_query)
                         .then(slotsData => {
