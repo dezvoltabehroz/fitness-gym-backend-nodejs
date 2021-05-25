@@ -68,15 +68,23 @@ module.exports = {
             subject: `Educo Gym Verification Code`,
             html: `
             <p>
-                <b><i>Your verification code: ${code}</i></b>
+                <img src="https://educogym.s3-eu-west-1.amazonaws.com/email_images/email_image.png" />
             </p>
             <p>
-                Enter the code above to reset your password. If you have any questions, feel free to contact us at <a href="mailto:contact@educogym.com">Contact Us</a>
+                Welcome to Educogym Eccles Street! <br/>
+                These are your login details: --------- <br/>
+                <b><i>Your verification code: ${code}</i></b><br/>
+                Use the app to book all of your workouts from now on and contact reception for assessment bookings.
             </p>
             <p>
-                Thank you!<br/>
-                Team Educo Gym<br/>
-                <a href="https://educogym.com/">Educo GYm</a>
+                You have made a great decision! We are based on research that shows the mind and body are deeply connected and should be trained together for optimum results.<br/>
+                The research was conducted by Dr. Tony Quinn and involved a full body transformation where participants lost 7.5lbs fat and gained 3lbs muscle in just 12 days. <br/>
+                It was shown the key to these extraordinary results was learning to use a greater part of the mind that allowed the person to draw out their potential /perfect shape from within. <br/>
+                We recommend using the two mp3 files Start a new life today and Relaxation with a purpose from Educohealth  in conjunction with the nutrition and training we will provide to achieve your very best results with us. <br/>
+            </p>
+            <p>
+                Yours in health, <br/>
+                Educogym Eccles Street<br/>
             </p>
             `
         };
