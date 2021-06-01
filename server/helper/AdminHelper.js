@@ -275,14 +275,14 @@ exports.addUser = (req, res) => {
                                             })
                                         }
                                     })
-                                    .catch(err => common.resOnError(res, false, err))
+                                    .catch(err => common.resOnError(res, false, { Error: "Error 1", Message: err }))
                             })
-                            .catch(err => common.resOnError(res, false, err))
+                            .catch(err => common.resOnError(res, false, { Error: "Error 2", Message: err }))
                     })
-                    .catch(err => common.resOnError(res, false, err))
+                    .catch(err => common.resOnError(res, false, { Error: "Error 3", Message: err }))
             }
         })
-        .catch(err => common.resOnError(res, false, err))
+        .catch(err => common.resOnError(res, false, { Error: "Error 4", Message: err }))
 }
 
 // Exercise Plan Helper
