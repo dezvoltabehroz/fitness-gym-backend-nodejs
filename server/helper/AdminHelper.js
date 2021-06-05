@@ -252,7 +252,7 @@ exports.addUser = (req, res) => {
                 bcrypt.hash(password, 10)
                     .then(hashedPassword => {
                         let query_insert_users = `INSERT INTO users(first_name, last_name, age, dob, phone, emergency_num, email, address, gender, full_name,password,profile_picture) values 
-                    ('${first_name}','${last_name}','${age}','${dob}','${phone}','${emergency_num}','${email}','${address}','${gender}','${first_name} ${last_name}','${hashedPassword}','${profile_picture}')`
+                    ("${first_name}","${last_name}",'${age}','${dob}','${phone}','${emergency_num}','${email}','${address}','${gender}',"${first_name} ${last_name}",'${hashedPassword}','${profile_picture}')`
 
                         query.executeQuery(query_insert_users)
                             .then(userData => {
