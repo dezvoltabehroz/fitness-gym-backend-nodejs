@@ -330,7 +330,11 @@ exports.listAllBooking = (req, res) => {
                 let data_schedule = scheduleData[0];
                 bookingSlots(date, data_schedule.start_time, data_schedule.end_time)
                     .then(result => {
-                        result.map((slotData, index) => {
+                        // result.map(async (slotData, index) => {
+                        //     console.log("==> ",slotData.booking_end_time)
+                        // })
+                        // common.resOnSuccess(res, true, "Booking List has been fetched successfully", result)
+                        result.map(async (slotData, index) => {
                             if (slotData.is_blocked == 1)
                                 blocked_slots.push(slotData)
 
@@ -350,7 +354,6 @@ exports.listAllBooking = (req, res) => {
                                 common.resOnSuccess(res, true, "Booking List has been fetched successfully", objJson)
                             }
                         })
-
                     })
                     .catch(err => common.resOnError(res, false, err))
             }
