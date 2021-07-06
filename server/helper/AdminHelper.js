@@ -328,7 +328,7 @@ exports.listAllBooking = (req, res) => {
         .then(scheduleData => {
             if (scheduleData.length > 0) {
                 let data_schedule = scheduleData[0];
-                bookingSlots(date, data_schedule.start_time, data_schedule.end_time)
+                bookingSlots(date, data_schedule.start_time, data_schedule.end_time, data_schedule.break_start_time, data_schedule.break_end_time)
                     .then(result => {
                         // result.map(async (slotData, index) => {
                         //     console.log("==> ",slotData.booking_end_time)
@@ -591,9 +591,9 @@ exports.cancelPendingRequest = (req, res) => {
 }
 
 // ============================================================== Function ==============================================================
-function bookingSlots(date, start_time, end_time) {
+function bookingSlots(date, start_time, end_time, break_start_time, break_end_time) {
     return new Promise((resolve, reject) => {
-        bookingSlotsArray(date, start_time, end_time)
+        bookingSlotsArray(date, start_time, end_time, break_start_time, break_end_time)
             .then(resultArray => {
                 resolve(resultArray)
             })
@@ -601,7 +601,7 @@ function bookingSlots(date, start_time, end_time) {
     })
 }
 
-function bookingSlotsArray(date, start_time, end_time) {
+function bookingSlotsArray(date, start_time, end_time, break_start_time, break_end_time) {
     return new Promise((resolve, reject) => {
         let interval = "20";
 
@@ -677,7 +677,15 @@ function bookingSlotsArray(date, start_time, end_time) {
                             } else {
                                 bookingSlots.booked_slots = 0
                                 bookingSlots.is_booked = 0
-                                bookingSlots.is_blocked = 0
+                                // console.log("BST : ", bookingSlots.booking_start_time, " BET : ", bookingSlots.booking_end_time)
+                                // console.log("break_start_time : ", break_start_time, " break_end_time : ", break_end_time)
+                                // console.log((bookingSlots.booking_start_time >= break_start_time && bookingSlots.booking_end_time <= break_end_time))
+                                // console.log("===========================")
+                                if (bookingSlots.booking_start_time >= break_start_time && bookingSlots.booking_end_time <= break_end_time) {
+                                    bookingSlots.is_blocked = 1
+                                } else {
+                                    bookingSlots.is_blocked = 0
+                                }
                             }
 
                             let query_booking_user = `
