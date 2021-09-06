@@ -346,10 +346,10 @@ exports.listAllBooking = (req, res) => {
 
                             if (result.length == (index + 1)) {
                                 let objJson = {
-                                    all_slots: result,
-                                    blocked_slots: blocked_slots,
-                                    full_slots: full_slots,
-                                    available_slots: available_slots
+                                    all_slots: sortArrayOnSeq(result),
+                                    blocked_slots: sortArrayOnSeq(blocked_slots),
+                                    full_slots: sortArrayOnSeq(full_slots),
+                                    available_slots: sortArrayOnSeq(available_slots)
                                 }
                                 common.resOnSuccess(res, true, "Booking List has been fetched successfully", objJson)
                             }
@@ -604,8 +604,10 @@ function bookingSlots(date, start_time, end_time, break_start_time, break_end_ti
 function bookingSlotsArray(date, start_time, end_time, break_start_time, break_end_time) {
     return new Promise((resolve, reject) => {
         let interval = "20";
+        let sequence = 1;
 
         let bookingSlots = {};
+        bookingSlots.sequence = sequence++;
         bookingSlots.booking_time_duration = "00:20:00";
         bookingSlots.booking_start_time = start_time;
         bookingSlots.booking_end_time = moment(start_time, 'HH:mm:ss').add(interval, 'minutes').format("HH:mm:ss");
@@ -696,8 +698,10 @@ function bookingSlotsArray(date, start_time, end_time, break_start_time, break_e
                             query.executeQuery(query_booking_user)
                                 .then(dbUsers => {
                                     bookingSlots.userAdded = dbUsers
+                                    bookingSlots.sequence = sequence++;
 
                                     timeSlots.push(bookingSlots);
+
 
                                     if (bookingSlots.booking_end_time == end_time)
                                         resolve(timeSlots)
@@ -716,4 +720,8 @@ function addMinutes(time, minutes) {
         ((date.getMinutes().toString().length == 1) ? '0' + date.getMinutes() : date.getMinutes()) + ':' +
         ((date.getSeconds().toString().length == 1) ? '0' + date.getSeconds() : date.getSeconds());
     return tempTime;
+}
+
+function sortArrayOnSeq(sortArr){
+    return sortArr.sort((a, b) => parseFloat(a.sequence) - parseFloat(b.sequence));
 }
