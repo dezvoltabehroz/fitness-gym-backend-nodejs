@@ -671,7 +671,7 @@ function bookingSlotsArray(date, start_time, end_time, break_start_time, break_e
                         AND booking_date = '${moment(date).format('yyyy-MM-DD')}' and is_cancel = 0 group by is_blocked`
 
                     await query.executeQuery(booking_slots_query)
-                        .then(slotsData2 => {
+                        .then(async slotsData2 => {
                             if (slotsData2.length > 0) {
                                 bookingSlots.booked_slots = slotsData2[0].booked_slots
                                 bookingSlots.is_booked = slotsData2[0].is_booked
@@ -695,13 +695,12 @@ function bookingSlotsArray(date, start_time, end_time, break_start_time, break_e
                                         FROM users
                                         INNER JOIN booking ON booking.customer_id = users.id
                                         WHERE booking.booking_date = '${moment(date).format('yyyy-MM-DD')}' AND booking.booking_start_time = '${bookingSlots.booking_start_time}' AND booking_end_time='${bookingSlots.booking_end_time}'`
-                            query.executeQuery(query_booking_user)
+                            await query.executeQuery(query_booking_user)
                                 .then(dbUsers => {
                                     bookingSlots.userAdded = dbUsers
                                     bookingSlots.sequence = sequence++;
 
                                     timeSlots.push(bookingSlots);
-
 
                                     if (bookingSlots.booking_end_time == end_time)
                                         resolve(timeSlots)
